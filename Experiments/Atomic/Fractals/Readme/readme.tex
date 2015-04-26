@@ -1,0 +1,136 @@
+% !TEX TS-program = pdflatex
+% !TEX encoding = UTF-8 Unicode
+
+% This is a simple template for a LaTeX document using the "article" class.
+% See "book", "report", "letter" for other types of document.
+
+\documentclass[english,11pt]{article} % use larger type; default would be 10pt
+
+\usepackage[utf8]{inputenc} % set input encoding (not needed with XeLaTeX)
+
+%%% Examples of Article customizations
+% These packages are optional, depending whether you want the features they provide.
+% See the LaTeX Companion or other references for full information.
+
+%%% PAGE DIMENSIONS
+\usepackage{geometry} % to change the page dimensions
+\geometry{letterpaper} % or letterpaper (US) or a5paper or....
+\geometry{margin=0.75in} % for example, change the margins to 2 inches all round
+% \geometry{landscape} % set up the page for landscape
+%   read geometry.pdf for detailed page layout information
+
+\usepackage{graphicx} % support the \includegraphics command and options
+
+% \usepackage[parfill]{parskip} % Activate to begin paragraphs with an empty line rather than an indent
+
+%%% PACKAGES
+\usepackage{booktabs} % for much better looking tables
+\usepackage{array} % for better arrays (eg matrices) in maths
+\usepackage{verbatim} % adds environment for commenting out blocks of text & for better verbatim
+%\usepackage{subfig} % make it possible to include more than one captioned figure/table in a single float
+% These packages are all incorporated in the memoir class to one degree or another...
+\usepackage{amsthm,amsmath, amssymb}
+\usepackage[authoryear]{natbib}
+\usepackage[colorlinks=true,citecolor=blue, urlcolor=blue,breaklinks]{hyperref}
+\usepackage{babel}
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage{graphicx} % support the \includegraphics command and options
+\usepackage{color}
+\usepackage{framed}
+\usepackage{lscape}
+\usepackage{rotating}
+\usepackage{algorithm}
+\usepackage[noend]{algpseudocode}
+
+%%% HEADERS & FOOTERS
+\usepackage{fancyhdr} % This should be set AFTER setting up the page geometry
+\pagestyle{fancy} % options: empty , plain , fancy
+\renewcommand{\headrulewidth}{0pt} % customise the layout...
+\lhead{}\chead{}\rhead{}
+\lfoot{}\cfoot{\thepage}\rfoot{}
+
+\usepackage{amssymb,amsmath,amsfonts}
+\usepackage{hyperref}
+\usepackage{natbib}
+
+\usepackage{chngcntr}
+\counterwithout{figure}{section}
+\counterwithout{table}{section}
+%%% SECTION TITLE APPEARANCE
+%\usepackage{sectsty}
+%\allsectionsfont{\sffamily\mdseries\upshape} % (See the fntguide.pdf for font help)
+% (This matches ConTeXt defaults)
+
+%%% ToC (table of contents) APPEARANCE
+%\usepackage[nottoc,notlof,notlot]{tocbibind} % Put the bibliography in the ToC
+%\usepackage[titles,subfigure]{tocloft} % Alter the style of the Table of Contents
+%\renewcommand{\cftsecfont}{\rmfamily\mdseries\upshape}
+%\renewcommand{\cftsecpagefont}{\rmfamily\mdseries\upshape} % No bold!
+
+%%% END Article customizations
+
+%%% The "real" document content comes below...
+
+\title{Fractal Dynamics of Spectral Density Calculations}
+\author{Edgar Dobriban\thanks{Department of Statistics, Stanford University, \texttt{dobriban@stanford.edu}} }
+
+%\date{} % Activate to display a given date or no date (if empty),
+         % otherwise the current date is printed 
+
+\begin{document}
+\maketitle
+\tableofcontents
+\section{Introduction}
+
+This folder contains supplementary information on the complex dynamics
+of methods for solving the Silverstein-Marchenko-Pastur equation.
+
+We provide scripts to compute the Julia sets of iterative methods for 
+this problem. These scripts are written in the language UltraFractal.
+
+\begin{itemize}
+\item{Version: } 0.0.1
+\item{Requirements: } UltraFractal (tested on 5.04) 
+\item{Author: } Edgar Dobriban
+\item{License: } \verb+GPL-3+
+\end{itemize}
+
+\section{Contents}
+
+There are two folders, corresponding to the Fixed Point and Newton Methods.
+
+\subsection{ ./Fixed Point Method}
+\begin{itemize}
+\item \verb+./MP_Iter_Sol.ufm+ - This contains an UltraFractal formula. It programs the fixed
+point iteration method for a population spectrum $H = \frac{1}{2}(\delta_1 + \delta_{10})$.
+\item \verb+./MP_Iter_Julia_Set.png+ - This is a picture showing the Julia set of the dynamical
+system. The Julia set (white) belongs to the negative complex half-lane $\{z: im(z)<0\}$, which
+confirms empirically that the method converges for $z$ with positive imaginary part.
+
+\begin{figure}
+\centering
+  \includegraphics[scale=1]{"../Fixed Point Method/MP_Iter_Julia_Set"}
+\caption{Julia set of Fixed Point Method.}
+\label{fig1}
+\end{figure}
+
+\end{itemize}
+
+\subsection{ ./Newton Method}
+\begin{itemize}
+\item \verb+./MP_newton.ufm+ - This contains an UltraFractal formula. It programs Newton's 
+method for a population spectrum $H =\delta_1$.
+\item \verb+./high_resolution_MP_null.png+ - This is a picture showing the Julia set of the dynamical
+system. The Julia set is now a complicated-looking fractal. This provides empirical
+support for our claims in the accompanying paper that Newton's method is numerically sensitive.
+\end{itemize}
+
+\begin{figure}
+\centering
+  \includegraphics[scale=1]{"../Newton Method/high_resolution_MP_null"}
+\caption{Julia set of Newton Method.}
+\label{fig1}
+\end{figure}
+
+\end{document}

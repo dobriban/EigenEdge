@@ -1,0 +1,41 @@
+MP_Newton {
+;
+; Standard Newton fractal.
+;
+init:
+  z = pixel
+loop:
+  g = - @x - 1/z + @gamma(1/(1+z))
+  dg = 1/z^2 - @gamma(1/(1+z)^2 )
+  z = z - g / dg
+bailout:
+  |g| >= @bailout
+default:
+  title = "MP_Newton"
+$IFDEF VER50
+  rating = recommended
+$ENDIF
+  maxiter = 100
+  param x
+    caption = "Argument of Stieltjes Transform"
+    default = (1,0)
+    hint = "Specifies the Argument where the Stieltjes Transform is to be solved."
+  endparam
+  param gamma
+    caption = "Aspect Ratio"
+    default = (0.5,0)
+    hint = "Specifies the aspect ratio p/n"
+  endparam
+  param bailout
+    caption = "Bailout value"
+    default = 0.0001
+    min = 0
+$IFDEF VER40
+    exponential = true
+$ENDIF
+    hint = "This parameter defines how soon a convergent orbit bails out while \
+            iterating. Smaller values give more precise results but usually \
+            require more iterations."
+  endparam
+}
+

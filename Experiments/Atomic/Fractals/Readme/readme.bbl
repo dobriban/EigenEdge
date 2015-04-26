@@ -1,0 +1,37 @@
+\begin{thebibliography}{}
+
+\bibitem[Dobriban et~al., 2015]{dobriban2015optimal}
+Dobriban, E., Fortney, K., Kim, S., and Owen, A.~B. (2015).
+\newblock Optimal multiple testing under a gaussian prior on the effect sizes.
+\newblock {\em in preparation}.
+
+\bibitem[Roeder et~al., 2006]{roeder2006using}
+Roeder, K., Bacanu, S.-A., Wasserman, L., and Devlin, B. (2006).
+\newblock Using linkage genome scans to improve power of association in genome
+  scans.
+\newblock {\em The American Journal of Human Genetics}, 78(2):243--252.
+
+\bibitem[Roeder and Wasserman, 2009]{roeder2009genome}
+Roeder, K. and Wasserman, L. (2009).
+\newblock Genome-wide significance levels and weighted hypothesis testing.
+\newblock {\em Statistical science: a review journal of the Institute of
+  Mathematical Statistics}, 24(4):398--413.
+
+\bibitem[Rubin et~al., 2006]{rubin2006method}
+Rubin, D., Dudoit, S., and Van~der Laan, M. (2006).
+\newblock A method to increase the power of multiple testing procedures through
+  sample splitting.
+\newblock {\em Statistical Applications in Genetics and Molecular Biology},
+  5(1):1--19.
+
+\bibitem[Spjotvoll, 1972]{spjotvoll1972optimality}
+Spjotvoll, E. (1972).
+\newblock On the optimality of some multiple comparison procedures.
+\newblock {\em The Annals of Mathematical Statistics}, 43(2):398--411.
+
+\bibitem[Wasserman and Roeder, 2006]{wasserman2006weighted}
+Wasserman, L. and Roeder, K. (2006).
+\newblock Weighted hypothesis testing.
+\newblock {\em arXiv preprint math/0604172}.
+
+\end{thebibliography}

@@ -1,0 +1,11 @@
+This is BibTeX, Version 0.99dThe top-level auxiliary file: readme.aux
+The style file: apalike.bst
+Database file #1: eigenvalues.bib
+I was expecting a `,' or a `}'---line 159 of file eigenvalues.bib
+ :   
+ :   series={Springer Series In Computational Mathematics}
+(Error may have been on previous line)
+I'm skipping whatever remains of this entry
+Warning--I didn't find a database entry for "dobriban2015optimal"
+Warning--empty journal in dobriban2015precise
+(There was 1 error message)

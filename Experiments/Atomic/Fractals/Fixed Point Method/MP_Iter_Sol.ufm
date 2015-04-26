@@ -1,0 +1,41 @@
+MP_Iter_Sol {
+;
+; Iterative Solution of MP equation
+;
+init:
+  z = pixel
+loop:
+  zold = z
+  A = @x - @gamma*(1/(1+z) + 1/(1/10+z))
+  z = -1/A
+bailout:
+  |zold-z| >= @bailout
+default:
+  title = "MP_Iter"
+$IFDEF VER50
+  rating = recommended
+$ENDIF
+  maxiter = 100
+  param x
+    caption = "Argument of Stieltjes Transform"
+    default = (1,0.1)
+    hint = "Specifies the Argument where the Stieltjes Transform is to be solved."
+  endparam
+  param gamma
+    caption = "Aspect Ratio"
+    default = (0.2,0)
+    hint = "Specifies the aspect ratio p/n"
+  endparam
+  param bailout
+    caption = "Bailout value"
+    default = 0.001
+    min = 0
+$IFDEF VER40
+    exponential = true
+$ENDIF
+    hint = "This parameter defines how soon a convergent orbit bails out while \
+            iterating. Smaller values give more precise results but usually \
+            require more iterations."
+  endparam
+}
+
