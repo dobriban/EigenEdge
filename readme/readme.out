@@ -1,5 +1,11 @@
 \BOOKMARK [1][-]{section.1}{Introduction}{}% 1
 \BOOKMARK [1][-]{section.2}{Installation}{}% 2
 \BOOKMARK [1][-]{section.3}{Example}{}% 3
-\BOOKMARK [1][-]{section.4}{P-value weighting methods}{}% 4
-\BOOKMARK [2][-]{subsection.4.1}{Bayes}{section.4}% 5
+\BOOKMARK [2][-]{subsection.3.1}{Background}{section.3}% 4
+\BOOKMARK [2][-]{subsection.3.2}{Quick example}{section.3}% 5
+\BOOKMARK [2][-]{subsection.3.3}{Longer example}{section.3}% 6
+\BOOKMARK [1][-]{section.4}{Computational methods}{}% 7
+\BOOKMARK [2][-]{subsection.4.1}{Atomic: computing the limit spectrum}{section.4}% 8
+\BOOKMARK [2][-]{subsection.4.2}{Moments and Quantiles of the ESD}{section.4}% 9
+\BOOKMARK [2][-]{subsection.4.3}{Utilities}{section.4}% 10
+\BOOKMARK [3][-]{subsubsection.4.3.1}{Arithmetic and geometric models for eigenvalues}{subsection.4.3}% 11

@@ -16,7 +16,7 @@ function [grid, density, m, v, mass_at_0, K_hat, l_hat, u_hat, x, f_hat] = ...
 % t - population eigenvalues >0; real vector of size J,
 % w - mixture weights >0; real vector of size J, default: w = uniform
 % gamma - aspect ratio p/n, real scalar
-% epsilon - (optional) accuracy parameter; square root of the imaginary part of the grid where MP is solved
+% epsilon - (optional) accuracy parameter
 % r - (optional) intervals where the continuous part of the spectrum is supported,
 %       real matrix of size Jx2, i-th row encodes the endpoints [a,b] of
 %       the i-th continuous component of the spectrum

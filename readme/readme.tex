@@ -83,24 +83,26 @@
 \tableofcontents
 \section{Introduction}
 
-The \textsc{EigenEdge} MATLAB package contains open source implementations methods for working with eigenvalue distributions of large random matrices. In particular, it contains the \textsc{Atomic} method to compute the limit empirical spectrum of sample covariance matrices \citep[proposed in][]{dobriban2015precise}. %These are methods for improving power in multiple testing via the use of prior information.  
+The \textsc{EigenEdge} MATLAB package contains open source implementations of methods for working with eigenvalue distributions of large random matrices. In particular, it contains the \textsc{Atomic} method to compute the limit empirical spectrum of sample covariance matrices \citep[proposed in][]{dobriban2015precise}. %These are methods for improving power in multiple testing via the use of prior information.  
 
 \begin{itemize}
 \item{Version: } 0.0.1
-\item{Requirements: } Tested on MATLAB R2014a and R2014b. 
+\item{Requirements: } Tested on MATLAB R2014b. 
 \item{Author: } Edgar Dobriban
 \item{License: } \verb+GPL-3+
 \end{itemize}
 
-In addition, this package contains the code to reproduce all simulation results from the paper \cite{dobriban2015precise}. These are contained in the \verb+\Experiments+ folder.
+In addition, this package contains the code to reproduce all simulation results from the paper \cite{dobriban2015precise}. These are contained in the \verb+\Experiments\Atomic+ folder.
 
 \section{Installation}
 
 Extract the archive in any folder, say to \verb+<path>+ . The main functions are in the \verb+Code+ directory, which needs to be on the Matlab path, along with all of its subfolders. This can be accomplished in at least three ways. First, you can add the following lines to your Matlab startup:
 
-$$\verb+addpath('<path>/pvalue_weighting_matlab/Code')+$$
-$$\verb+addpath('<path>/pvalue_weighting_matlab/Code/Basic')+$$
-$$\verb+addpath('<path>/pvalue_weighting_matlab/Code/External Helper Code')+$$
+\begin{verbatim}
+addpath('<path>/pvalue_weighting_matlab/Code')
+addpath('<path>/pvalue_weighting_matlab/Code/Basic')
+addpath('<path>/pvalue_weighting_matlab/Code/External Helper Code')
+\end{verbatim}
 
 The second option is to add those line to scripts that call functions in this package. The third option is to execute the  \verb+setpaths.m+ script every time you start a new session with the \textsc{EigenEdge} package. This will include the current folder in the Matlab search path.
 
@@ -111,37 +113,112 @@ This file is the main documentation for the package. To start, look at the examp
 \section{Example}
 \label{example}
 
-\section{P-value weighting methods}
+Here we give a simple example of using the \textsc{Atomic} function for computing limit spectra of sample covariance matrices. We refer to the paper \cite{dobriban2015precise} for a full description of the method. 
+
+\subsection{Background}
+
+We begin with the problem statement (borrowed from our paper). Consider a large $n \times p$ matrix $\mathbf{X}$, whose rows $x^i$ are independent random vectors. Suppose that $x^i$ are mean zero, and their covariance matrix is the $p \times p$ matrix $\Sigma = \mathbb{E}{x^i x^{i\top}}$. To estimate $\Sigma$, we form the sample covariance matrix
+
+$$
+\widehat{\Sigma} = \frac{1}{n} \mathbf{X}^\top \mathbf{X}.
+$$
+
+If $n$ and $p$ are of comparable size, then $\widehat{\Sigma}$ deviates substantially from the true covariance. The asymptotic theory of random matrices describes the behavior of the eigenvalues of $\widehat{\Sigma}$ as $n,p$ grow large proportionally \citep[e.g.][]{bai2009spectral}. It is well known that, if the distribution of the eigenvalues of $\Sigma$ tends to a limit population spectral distribution (SD) $H$, as $n,p \to \infty$ and the aspect ratio $p/n \to \gamma$, then the random eigenvalue distribution of $\widehat{\Sigma}$ also tends to a deterministic limit empirical spectrum $F$ \citep{marchenko1967distribution,silverstein1995strong}. This limit differs from the true spectrum.
+
+\subsection{Quick example}
+
+The \textsc{Atomic} method is designed to compute the limit sample spectrum $F$ from the limit population spectrum $H$. It is easy to use: in its simplest form, we need to provide a vector of population eigenvalues \verb+t+ (in this case $H$ is a uniform mixture of point masses at $t_i$), and an aspect ratio $\verb+gamma+$, and call $\verb+atomic(t,gamma)+$. \textsc{Atomic} will return a grid and pointwise density estimates of the limit spectrum $F$. 
+
+The code below (excerpted from \verb+example.m+) shows an example, in which the eigenvalues are placed at \verb+t = [1; 5]+, and the aspect ratio \verb+gamma = 1/2+:
+
+
+\begin{verbatim}
+t = [1; 5]; %location of population eigenvalues: H = 1/n\sum delta_{t_i}
+gamma = 1/2; %aspect ratio gamma = p/n
+[grid, density] =  atomic(t, gamma); %compute limit spectrum
+\end{verbatim}
+
+The density can be plotted with 
+
+\begin{verbatim}
+figure, plot(grid, density,'r','LineWidth',4) %plot
+xlabel('Eigenvalue')
+ylabel('Density');
+\end{verbatim}
+
+The results are shown below:
+
+\begin{figure}[ht!]
+\centering
+\includegraphics[scale=0.5]{"../Experiments/Examples/quick_example"}
+\caption{Density of the limit spectrum}
+\label{scatter_prior_current}
+\end{figure}
+
+\subsection{Longer example}
+
+
+\section{Computational methods}
 \label{methods}
 
-For each p-value weighting method, we assume we observe data $T_i \sim \mathcal{N}(\mu_i, 1)$ and test each null hypothesis $H_i: \mu_i \ge 0$ against $\mu_i <0$.  The p-value for testing $H_i$ is $P_i = \Phi(T_i)$, where $\Phi$ is the normal cumulative distribution function.  For a weight vector $w \in [0,\infty)^{J}$ and significance level $q \in [0,1]$, the weighted Bonferroni procedure rejects $H_{i}$ if $P_i \le q w_i$. Usual Bonferroni corresponds to $w_i=1$.
+\subsection{Atomic: computing the limit spectrum}
 
-Each p-value weighting method assumes some additional independent information about $\mu_i$, and returns a weight vector $w$. These can then be used for weighted Bonferroni or other multiple testing procedures.
+The \textsc{Atomic} method computes the limit sample spectrum of covariance matrices from the limit population spectrum. The  main user interface for this computation is \verb+atomic()+. This function takes as input the population spectral distribution $H$, aspect ratio $\gamma$, and other parameters, and computes the density of the limit spectrum on a grid. 
 
-\subsection{Bayes}
+The basic syntax of this function is :
 
+$$\verb+[grid, density]= atomic(t,gamma)+$$
 
-Bayes p-value weights can be computed using:  \verb+[w, q_star, q_thresh, c]+ \verb+= bayes_weights(eta, sigma, q)+. The inputs specify the prior distribution of the means $\mu_i $ of the test statistics as:
-
-$$\mu_i \sim \mathcal{N}(\eta_i,\sigma_i^2), \mbox{   } i \in \{1,\ldots, J\}$$ 
-
-where:
-
+In the basic setup, it requires only two inputs: 
 \begin{itemize}
-\item \verb+eta+:  a vector of length J, the estimated means of test statistics, derived from the prior data
-\item \verb+sigma+:  a strictly positive vector of length J, the estimated standard errors of test statistics, derived from the prior data
-\item \verb+q+: The weights are optimal if each hypothesis is tested at level $q$. For instance, if we want to control the FWER globally at $0.05$, then we should use $q = 0.05/J$.
+\item \verb+t+:  a vector of positive entries, the locations of the population eigenvalues (length $J$)
+\item \verb+gamma+:  aspect ratio $\gamma = p/n$
 \end{itemize}
+
+In the basic case the population spectrum is defined as an equal mixture of point masses at $t_i$: $H = J^{-1} \sum_{i=1}^{J} \delta_{t_i}$. 
 
 The outputs are: 
 \begin{itemize}
-\item \verb+w+:  the optimal weights. A non-negative vector of length J.
-\item \verb+q_star+: the value $q^*$ for which the weights are optimal. This may differ slightly from the original $q$ if $q$ is large.
-\item \verb+q_thresh+: the largest value of $q$ for which the weights can be computed exactly 
-\item \verb+c+:  the normalizing constant produced by solving the optimization problem.
+\item \verb+grid+: a positive grid where the density is computed
+\item \verb+density+: pointwise numerical approximations to the density on the \verb+grid+
 \end{itemize}
 
-This method was proposed in \cite{dobriban2015optimal}.
+The complete syntax of the function is:
+
+$$\verb+[grid, density,m, v, mass_at_0, K_hat, l_hat, u_hat, x, f_hat]= atomic(t,gamma,varargin)+$$
+
+Here, in addition to the above two arguments \verb+t,gamma+, a much larger set of input arguments can be specified within \verb+varargin+. A complete call, including all parameters, looks like:
+
+$$\verb+atomic(t, gamma, w, r, w_int, epsilon,M)+$$
+
+The extra arguments \verb+w, r, w_int, epsilon,M+ are optional. You can specify any subset of them, however, you must always use them in this order. If you wish to specify some later arguments, and leave some earlier ones default, then place an empty array \verb+[]+ in their place. For instance, to specify \verb+epsilon = 1e-6+ without specifying \verb+w+ etc, call  \verb+atomic(t,gamma,[],[],[],1e-6)+.
+  
+The inputs specify the population spectrum $H$ as a mixture of point masses and uniform distributions:
+
+\begin{equation*}
+\label{H_mixture}
+H = \sum_{i=1}^{J} w_i \delta_{t_i} + \sum_{t=1}^{T} w^*_t U(a_t,b_t)  .
+\end{equation*}
+
+Here $\delta_t$ is the point mass at $t$ and $U(a,b)$ is the uniform distribution on $[a,b]$. The parameters of the mixture can be set using the parameters of \verb+atomic()+, which are, in order:
+
+\begin{itemize}
+\item \verb+w+: mixture weights of the components of $t$ in the input spectrum. This must be a positive vector of size J. The default is a uniform vector of length $J$: $w = (1,1,\ldots,1)/J$. If a continuous part of the component is also specified with \verb+r+, then this parameter must not be empty. The reason is that these weights and \verb+w_int+ implictly depend on each other, as they must sum to 1.
+
+\item \verb+r+: intervals where the continuous part of the spectrum is supported.
+       A real matrix of size $J \times 2$, the $t$-th row encodes the endpoints $[a_t,b_t]$ of the $i$-th continuous component of the spectrum, a uniform distribution on $[a_t,b_t]$.
+\item \verb+w_int+:   weights of the continuous part of the spectrum. This must be a non-negative vector. The entry \verb+w_int[t]+ specifies the weights of the $i$-th continuous component of the spectrum, a uniform distribution on $[a_t,b_t]$. If this is empty, then the defualt value is a uniform distribution subject to the constraint \verb+sum(w)+sum(w\_int) =1+.
+\item \verb+epsilon+: accuracy parameter. As the accuracy parameter $\varepsilon \to 0$, the density approximation becomes more accurate. However, only the convergence of the procedure is guaranteed, not the actual accuracy. 
+\item \verb+M+:  number of grid points in each interval of the support. This is an additional parameter which allows the user to specify how many grid points should be used in each interval in the support of the sample spectrum. This is available for additonal flexibility. 
+\item \verb+alg+: The algorithm used to compute the density. The available choices are \verb+ {'atomic','fp','Newton'};+. These stand for: \verb+ 'atomic'+ is the \textsc{Atomic} algorithm proposed in \cite{dobriban2015precise}, \verb+ 'fp'+ is the fixed point method described in \cite{couillet2011deterministic}, and \verb+ 'Newton'+ is Newton's method, which the author learned from Jack W. Silverstein, and which is described in \cite{dobriban2015precise}. Please see that paper for more information on each method. 
+\end{itemize}
+
+\subsection{Moments and Quantiles of the ESD}
+
+\subsection{Utilities}
+
+\subsubsection{Arithmetic and geometric models for eigenvalues}
+
 
 \bibliography{eigenvalues}
 \bibliographystyle{apalike}
