@@ -10,15 +10,14 @@ function [density,m,v,numIter,lastStepSize,v_d] = ...
 %grid - real grid where MP transform should be computed
 
 %outputs
-% grid - real grid where Stieltjes transform is evaluated, real vector of size Nx1
 % density - approximation to the density on the grid
 % m - numerical approximation to Stieltjes transform on real line, complex vector of size Nx1
 % v - numerical approximation to dual Stieltjes transform on real line, complex vector of size Nx1
-%v_d - estimate of the derivatves of the Gram Stieltjes transform of f on the grid
 %numIter - number of iterations taken by the algorithm for each element of
 %   the grid
 %stepSize - last stepsize taken by the algorithm for each element of
 %   the grid
+%v_d - estimate of the derivatves of the Gram Stieltjes transform of f on the grid
 
 %note that the tolerance is set to delta = 1e-8 in 'MP_transform'
 %I know that these parameters guarantee that the result obeys
@@ -58,7 +57,7 @@ for i=1:L
         v1 = -1/grid_imag(i);
     else
         switch starting_point
-            case 'default'
+            case 'classical'
                 v1 = -1/grid_imag(i);
             case 'warm_start'
                 v1 = v(i-1);

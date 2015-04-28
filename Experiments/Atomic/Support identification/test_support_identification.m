@@ -1,9 +1,4 @@
 %Test support identification in geometric model
-%% set parameters of geometric model
-a = 0.3;
-b = 1.1;
-K = 10;
-[t,w]  = geometric_model(a,b,K);
 
 %% set parameters of arithmetic model
 gap = 0.01;
@@ -12,7 +7,7 @@ t_max = 10;
 K = 6;
 [t,w]  = arithmetic_model(K, t_min,t_max,gap);
 
-%% test ODE method
+%% test Atomic method
 epsi_array = 10.^(-(1:6))';
 gamma_array = 2.^(linspace(-5,-2,4))';
 K_err = zeros(length(epsi_array),length(gamma_array));
@@ -38,11 +33,6 @@ for i=1:length(epsi_array)
   end
 end
 
-%%
-save('test_support_identification.mat');
-%%
-load('test_support_identification.mat');
-
 %% Visualization
 %% plot K_err as a function of epsi
 a = {'-','--',':','-.'};
@@ -56,9 +46,9 @@ h = plot(-log10(epsi_array),K_err(:,4),'linewidth',2); set(h,'LineStyle',a{4});
 xlim([min(-log10(epsi_array)), max(-log10(epsi_array))])
 xlabel('Accuracy');
 ylabel('\Delta_K');
-set(gca,'fontsize',14)
+set(gca,'fontsize',20)
 h = legend('\gamma = 1/2^5','\gamma = 1/2^4','\gamma = 1/2^3','\gamma = 1/2^2');
-set(h,'FontSize',14);
+set(h,'FontSize',20);
 %%
 filename = sprintf( './identify_number_of_intervals_support.png');
 saveas(gcf, filename,'png');
@@ -74,9 +64,9 @@ h = plot(-log10(epsi_array),log10(l_err(:,3)),'linewidth',2); set(h,'LineStyle',
 h = plot(-log10(epsi_array),log10(l_err(:,4)),'linewidth',2); set(h,'LineStyle',a{4});
 xlabel('Accuracy');
 ylabel('log_{10}(\Delta_l)');
-set(gca,'fontsize',14)
+set(gca,'fontsize',20)
 h = legend('\gamma = 1/2^5','\gamma = 1/2^4','\gamma = 1/2^3','\gamma = 1/2^2');
-set(h,'FontSize',14);
+set(h,'FontSize',20);
 
 subplot(1,2,2), hold on
 h = plot(-log10(epsi_array),log10(u_err(:,1)),'linewidth',2); set(h,'LineStyle',a{1});
@@ -85,9 +75,9 @@ h = plot(-log10(epsi_array),log10(u_err(:,3)),'linewidth',2); set(h,'LineStyle',
 h = plot(-log10(epsi_array),log10(u_err(:,4)),'linewidth',2); set(h,'LineStyle',a{4});
 xlabel('Accuracy');
 ylabel('log_{10}(\Delta_u)');
-set(gca,'fontsize',14)
+set(gca,'fontsize',20)
 h = legend('\gamma = 1/2^5','\gamma = 1/2^4','\gamma = 1/2^3','\gamma = 1/2^2');
-set(h,'FontSize',14);
+set(h,'FontSize',20);
 
 %%
 filename = sprintf( './identify_endpoints_support.png');

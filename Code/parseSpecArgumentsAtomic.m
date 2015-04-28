@@ -17,7 +17,6 @@ r = [];
 w_int = [];
 epsilon = 1e-4;
 M = floor(sqrt(1/epsilon))+3;
-verbose = 1;
 
 %set defaults
 %required
@@ -30,6 +29,5 @@ addOptional(pa,'r',r,@isnumeric);
 addOptional(pa,'w_int',w_int,@isnumeric);
 addOptional(pa,'epsilon',epsilon,@isnumeric);
 addOptional(pa,'M',M,@isnumeric);
-addOptional(pa,'verbose',verbose,@isnumeric);
 
 addParameter(pa,'alg',defaultAlg,@(x) any(validatestring(x,expectedAlgs)));

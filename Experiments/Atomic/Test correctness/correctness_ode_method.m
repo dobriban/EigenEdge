@@ -22,12 +22,12 @@ for i=1:3;
     h = plot(grid,log10(abs(err)),'linewidth',3,'color',rand(1,3));
     set(h,'LineStyle',a{i});
 end
-set(gca,'fontsize',14)
+set(gca,'fontsize',20)
 h = legend('\epsilon=1e-4','\epsilon=1e-6','\epsilon=1e-8','location','Best');
 xlabel('x_i')
 ylabel('\Delta(x_i,\epsilon)');
 %figtitle('Numerical error as a function of tolerance');
-set(h,'FontSize',14);
+set(h,'FontSize',20);
 %% plot
 filename = sprintf( './Correctness_tests_numerical_error_null.png');
 saveas(gcf, filename,'png');
@@ -59,12 +59,12 @@ for i=1:3;
     h = plot(grid(ind),log10(abs(err(ind))),'linewidth',3,'color',rand(1,3));
     set(h,'LineStyle',a{i});
 end
-set(gca,'fontsize',14)
+set(gca,'fontsize',20)
 h = legend('\epsilon=1e-4','\epsilon=1e-6','\epsilon=1e-8','location','Best');
 xlabel('x_i')
 ylabel('\Delta(x_i,\epsilon)');
 %figtitle('Numerical error as a function of tolerance');
-set(h,'FontSize',14);
+set(h,'FontSize',20);
 %% plot
 filename = sprintf( './Correctness_tests_numerical_error_two-point.png');
 saveas(gcf, filename,'png');

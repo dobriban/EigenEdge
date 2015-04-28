@@ -38,7 +38,7 @@ function  [grid, density,m, v, mass_at_0, K_hat, l_hat, u_hat, x, f_hat]=...
 %       complex vector of size Nx1
 
 % Outputs only for atomic:
-% mass_at_0 - discrete probability mass placed at 0 by the dual ST
+% mass_at_0 - discrete probability mass placed at 0 by the ESD
 % K_hat - numerical approximation to number of disjoint clusters of support
 % l_hat - lower endpoints of support intervals; real vector of size K_hat;
 % u_hat - upper endpoints of support intervals; real vector of size K_hat;
@@ -65,7 +65,7 @@ end
 
 p = length(q.r);
 if isempty(q.w_int)
-    q.w_int = (1-sum(w))/p*ones(p,1);
+    q.w_int = (1-sum(q.w))/p*ones(p,1);
 end
 %set default return arguments
 K_hat = NaN; l_hat = NaN; u_hat = NaN; x = NaN; f_hat = NaN;

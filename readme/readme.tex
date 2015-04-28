@@ -83,7 +83,7 @@
 \tableofcontents
 \section{Introduction}
 
-The \textsc{EigenEdge} MATLAB package contains open source implementations of methods for working with eigenvalue distributions of large random matrices. In particular, it contains the \textsc{Atomic} method to compute the limit empirical spectrum of sample covariance matrices \citep[proposed in][]{dobriban2015precise}. %These are methods for improving power in multiple testing via the use of prior information.  
+The \textsc{EigenEdge} MATLAB package contains open source implementations of methods for working with eigenvalue distributions of large random matrices of the covariance type. In particular, it contains the \textsc{Atomic} method to compute the limit empirical spectrum of sample covariance matrices \citep[proposed in][]{dobriban2015precise}. %These are methods for improving power in multiple testing via the use of prior information.  
 
 \begin{itemize}
 \item{Version: } 0.0.1
@@ -96,24 +96,20 @@ In addition, this package contains the code to reproduce all simulation results 
 
 \section{Installation}
 
-Extract the archive in any folder, say to \verb+<path>+ . The main functions are in the \verb+Code+ directory, which needs to be on the Matlab path, along with all of its subfolders. This can be accomplished in at least three ways. First, you can add the following lines to your Matlab startup:
+Extract the archive in any folder, say to \verb+<path>+ . The main functions are in the \verb+Code+ directory, which needs to be on the Matlab path, along with all of its subfolders. This can be accomplished in two ways. First, you can add the following lines to your Matlab startup file \verb+startup.m+ :
 
 \begin{verbatim}
-addpath('<path>/pvalue_weighting_matlab/Code')
-addpath('<path>/pvalue_weighting_matlab/Code/Basic')
-addpath('<path>/pvalue_weighting_matlab/Code/External Helper Code')
+addpath('<path>/EigenEdge/Code')
 \end{verbatim}
 
-The second option is to add those line to scripts that call functions in this package. The third option is to execute the  \verb+setpaths.m+ script every time you start a new session with the \textsc{EigenEdge} package. This will include the current folder in the Matlab search path.
+The second option is to add that line to scripts that call functions in this package. 
 
-An example computation is in the \verb+\Experiments\Examples\example.m+ file. This is described in Section \ref{example}.
-
-This file is the main documentation for the package. To start, look at the example (Section \ref{example}) or at the methods implemented (Sections \ref{methods}).
+An example computation is in the \verb+\Experiments\Examples\example.m+ file. This is described in Section \ref{example}. This file is the main documentation for the package. To start, look at the example (Section \ref{example}) or at the methods implemented (Sections \ref{methods}).
 
 \section{Example}
 \label{example}
 
-Here we give a simple example of using the \textsc{Atomic} function for computing limit spectra of sample covariance matrices. We refer to the paper \cite{dobriban2015precise} for a full description of the method. The code for reproducing this example is available in the \verb+\Experiments\Examplesexample.m+ file in our package. 
+Here we give a simple example of using the \textsc{Atomic} function for computing limit spectra of sample covariance matrices. We refer to the paper \cite{dobriban2015precise} for a full description of the method. The code for reproducing this example is available in the \verb+\Experiments\Examples\example.m+ file in our package. 
 
 \subsection{Background}
 
@@ -254,7 +250,7 @@ set(h,'FontSize',14);
 
 This finishes the advanced example use of the \verb+Atomic+ function. 
 
-\subsection{More examples}
+\subsection{More examples: Reproducing the results of \cite{dobriban2015precise}}
 
 Several more reproducible examples are provided with the software package. These include the computational results presented in the paper \cite{dobriban2015precise}, which are found in the folder \verb+\Experiments\Atomic+. 
 
@@ -273,6 +269,7 @@ The examples include (and their locations are the following folders):
 \label{methods}
 
 \subsection{Atomic: computing the limit spectrum}
+\label{atomic_description}
 
 The \textsc{Atomic} method computes the limit sample spectrum of covariance matrices from the limit population spectrum. The  main user interface for this computation is \verb+atomic()+. This function takes as input the population spectral distribution $H$, aspect ratio $\gamma$, and other parameters, and computes the density of the limit spectrum on a grid. 
 
@@ -300,7 +297,7 @@ $$\verb+[grid, density,m, v, mass_at_0, K_hat, l_hat, u_hat, x, f_hat]= atomic(t
 
 Here, in addition to the above two arguments \verb+t,gamma+, a much larger set of input arguments can be specified within \verb+varargin+. A complete call, including all parameters, looks like:
 
-$$\verb+atomic(t, gamma, w, r, w_int, epsilon,M)+$$
+$$\verb+atomic(t, gamma, w, r, w_int, epsilon, M, alg)+$$
 
 The extra arguments \verb+w, r, w_int, epsilon,M+ are optional. You can specify any subset of them, however, you must always use them in this order. If you wish to specify some later arguments, and leave some earlier ones default, then place an empty array \verb+[]+ in their place. For instance, to specify \verb+epsilon = 1e-6+ without specifying \verb+w+ etc, call  \verb+atomic(t,gamma,[],[],[],1e-6)+.
   
@@ -314,6 +311,8 @@ H = \sum_{i=1}^{J} w_i \delta_{t_i} + \sum_{t=1}^{T} w^*_t U(a_t,b_t)  .
 Here $\delta_t$ is the point mass at $t$ and $U(a,b)$ is the uniform distribution on $[a,b]$. The parameters of the mixture can be set using the parameters of \verb+atomic()+, which are, in order:
 
 \begin{itemize}
+\item \verb+t+:  a vector of positive entries, the locations of the population eigenvalues (length $J$)
+\item \verb+gamma+:  aspect ratio $\gamma = p/n$
 \item \verb+w+: mixture weights of the components of $t$ in the input spectrum. This must be a positive vector of size J. The default is a uniform vector of length $J$: $w = (1,1,\ldots,1)/J$. If a continuous part of the component is also specified with \verb+r+, then this parameter must not be empty. The reason is that these weights and \verb+w_int+ implictly depend on each other, as they must sum to 1.
 
 \item \verb+r+: intervals where the continuous part of the spectrum is supported.
@@ -321,15 +320,266 @@ Here $\delta_t$ is the point mass at $t$ and $U(a,b)$ is the uniform distributio
 \item \verb+w_int+:   weights of the continuous part of the spectrum. This must be a non-negative vector. The entry \verb+w_int[t]+ specifies the weights of the $i$-th continuous component of the spectrum, a uniform distribution on $[a_t,b_t]$. If this is empty, then the defualt value is a uniform distribution subject to the constraint \verb+sum(w)+sum(w\_int) =1+.
 \item \verb+epsilon+: accuracy parameter. As the accuracy parameter $\varepsilon \to 0$, the density approximation becomes more accurate. However, only the convergence of the procedure is guaranteed, not the actual accuracy. 
 \item \verb+M+:  number of grid points in each interval of the support. This is an additional parameter which allows the user to specify how many grid points should be used in each interval in the support of the sample spectrum. This is available for additonal flexibility. 
-\item \verb+alg+: The algorithm used to compute the density. The available choices are \verb+ {'atomic','fp','Newton'};+. These stand for: \verb+ 'atomic'+ is the \textsc{Atomic} algorithm proposed in \cite{dobriban2015precise}, \verb+ 'fp'+ is the fixed point method described in \cite{couillet2011deterministic}, and \verb+ 'Newton'+ is Newton's method, which the author learned from Jack W. Silverstein, and which is described in \cite{dobriban2015precise}. Please see that paper for more information on each method. 
+\item \verb+alg+: The algorithm used to compute the density. The available choices are \verb+ {'atomic','fp','newton'};+. These stand for: \verb+ 'atomic'+ is the \textsc{Atomic} algorithm proposed in \cite{dobriban2015precise}, \verb+ 'fp'+ is the fixed point method described in \cite{couillet2011deterministic}, and \verb+ 'newton'+ is Newton's method, which the author learned from Jack W. Silverstein, and which is described in \cite{dobriban2015precise}. Please see that paper for more information on each method. 
 \end{itemize}
+
+The outputs \verb+[grid, density,m, v, mass_at_0, K_hat, l_hat, u_hat, x, f_hat]+ are: 
+
+\begin{itemize}
+\item \verb+grid+: a positive grid where the density is computed
+\item \verb+density+: pointwise numerical approximations to the density on the \verb+grid+
+\item \verb+m+: pointwise numerical approximations to Stieltjes transform of the Empirical Spectral Distribution $M$ on the \verb+grid+
+\item \verb+v+: pointwise numerical approximations to the companion Stieltjes transform of the Empirical Spectral Distribution $M$ on the \verb+grid+
+\end{itemize}
+
+Special outputs that are produced only if the method \verb+'alg'+ is Atomic: 
+\begin{itemize}
+\item \verb+mass_at_0+: The mass at 0 of the ESD
+\item \verb+K_hat+: numerical approximation to number of disjoint clusters of support
+\item \verb+l_hat+: lower endpoints of support intervals; real vector of size \verb+K_hat+;
+\item \verb+u_hat+: upper endpoints of support intervals; real vector of size \verb+K_hat+;
+\item \verb+x+: grid points within support intervals where density is approximated;
+      real matrix of size M x \verb+K_hat+; column i contains the i-th support
+     interval
+\item \verb+f_hat+: numerical approximation of density on grid x; same format as x
+\end{itemize}
+
+\subsection{Calling the solvers directly}
+
+In addition to the main wrapper \textsc{Atomic}, we also provide direct access to the solvers for computing the limit spectrum. Thse have a standardized syntax similar to the main wrapper, but they can offer more flexibility. Further, each function has a base implementation for working only with mixtures of point masses, and a more sophisticated version that also handles mixtures of uniform distributions.
+
+\subsubsection{\textsc{Atomic}}
+
+The \textsc{Atomic} method can be accessed directly in the following way. The arguments have the same format and meaning as for the main \verb+atomic()+ function. 
+
+\begin{verbatim}
+[grid, density, m, v, mass_at_0, K_hat, l_hat, u_hat, x, f_hat] = ...
+  compute_esd_ode(t, w, gamma,epsilon,M)
+\end{verbatim}
+
+Example:
+
+\begin{verbatim}
+t = [1; 5]; 
+w = [1; 1]/2;
+gamma = 1/2; 
+[grid, density,~, ~, mass_at_0] =  compute_esd_ode(t, w, gamma);
+\end{verbatim}
+
+The \textsc{Atomic} method allowing for uniform distributions (not just point masses) in the mixture can be accessed directly via
+
+\begin{verbatim}
+[grid, density, m, v, mass_at_0, K_hat, l_hat, u_hat, x, f_hat] = ...
+    compute_esd_ode_non_atomic(t, w, gamma, r,w_int,epsilon,M)
+\end{verbatim}
+
+
+\subsubsection{Fixed point method}
+
+The fixed point method can be accessed directly in the following way: 
+
+\begin{verbatim}
+[density,m,v,numIter,lastStepSize,v_d] = ...
+    compute_esd_fp(t,w,gamma,epsilon, grid,multiplier_num_iter, maxIter,starting_point)
+\end{verbatim}
+
+ The arguments mainly have the same format and meaning as for the main \verb+atomic()+ function, but there are some additions for extra flexibility:  
+ 
+ The required inputs are: 
+\begin{itemize}
+\item \verb+t+:  a vector of positive entries, the locations of the population eigenvalues (length $J$)
+\item \verb+w+: mixture weights of the components of $t$ in the input spectrum. This must be a positive vector of size J. The default is a uniform vector of length $J$: $w = (1,1,\ldots,1)/J$.
+\item \verb+gamma+:  aspect ratio $\gamma = p/n$
+\item \verb+epsilon+: accuracy parameter. As the accuracy parameter $\varepsilon \to 0$, the density approximation becomes more accurate. However, only the convergence of the procedure is guaranteed, not the actual accuracy. A good default is $10^{-4}$. The default number of iterations is by default \verb+maxIter = multiplier_num_iter/epsilon;+
+\item \verb+grid+: a positive grid where the density is computed. 
+\end{itemize}
+
+ The optional inputs are: 
+ 
+\begin{itemize}
+\item \verb+multiplier_num_iter+: a parameter which allows the maximum number of iterations to be multiplied by an additional factor. Default is 100.
+\item \verb+maxIter+: a parameter which allows the maximum number of iterations to be set directly. If this parameter is specified, then it overrides all other parameters controlling the number of iterations.  Default value is \verb+maxIter = multiplier_num_iter/epsilon;+
+\item \verb+starting_point+: Specifies the starting point of the iterative method for each element on the grid. The possible values are \verb+'classical', 'warm_start'+. \verb+`Classical'+ starts each iteration for an entry $z$ at $-1/z$, as specified in the default description of the fixed point algorithm. The default \verb+`warm_start'+ instead starts the new iteration where the last one finished. This can be more efficient.
+\end{itemize} 
+ 
+Some additional notes about this method: By default it solves the Marchanko-Pastur-Silverstein equation on a grid in the complex plane \verb+grid_imag = grid+ + \verb+  1i*epsilon^2;+ It runs the fixed point iteration on this grid until the maximum number of iterations is reached of until the tolerance criterion $|v_{n+1}-v_n|<\varepsilon$ holds. 
+
+The outputs are: 
+
+\begin{itemize}
+\item \verb+density+: pointwise numerical approximations to the density on the \verb+grid+
+\item \verb+m+: pointwise numerical approximations to Stieltjes transform of the Empirical Spectral Distribution $M$ on the \verb+grid+
+\item \verb+v+: pointwise numerical approximations to the companion Stieltjes transform of the Empirical Spectral Distribution $M$ on the \verb+grid+
+\item \verb+numIter+: number of iterations taken by the algorithm for each element of the grid. A real vector of the same length as the grid
+\item \verb+stepSize+: last stepsize taken by the algorithm for each element of
+the grid. A real vector of the same length as the grid
+\item \verb+v_d+: estimate of the derivatves of the Gram Stieltjes transform of f on the grid. A complex vector of the same length as the grid
+
+\end{itemize}
+
+Example:
+
+\begin{verbatim}
+t = [1; 5]; 
+w = [1; 1]/2;
+gamma = 1/2; 
+epsilon = 1e-4;
+grid = linspace(0,10,100)';
+[grid, density,~, ~, mass_at_0] =  compute_esd_fp(t, w, gamma,epsilon,grid);
+\end{verbatim}
+
+
+The fixed point method allowing for uniform distributions (not just point masses) in the mixture can be accessed directly via
+
+\begin{verbatim}
+[density,m,v,numIter,lastStepSize,v_d] = ...
+    compute_esd_fp_non_atomic(t,w,r,w_int,gamma,epsilon, grid,multiplier_num_iter, ...
+   maxIter,starting_point)
+\end{verbatim}
+
+The parameters of this method are the same as for atomic distributions, except \verb+r,w_int+ which were explained in Section \ref{atomic_description}.
+
+
+\subsubsection{Newton's method}
+
+Newton's method method can be accessed directly in the following way. The arguments have the same format and meaning as for the main \verb+atomic()+ function. 
+
+\begin{verbatim}
+ [grid, density, m, v, mass_at_0, K_hat, l_hat, u_hat, x, f_hat] = ...
+  compute_esd_newton(t, w, gamma, newton_update, epsilon,M)
+\end{verbatim}
+
+
+Only the first three input parameters are required, the rest are optional. There is a new input parameter: 
+
+\begin{itemize}
+\item \verb+newton_update+ method to find starting point for Newton method for each new grid point. This can be one of  \verb+ 'null', 'lin_spacing','sqrt_spacing'+. The default is null. Depending on the choice, after having converged to a solution \verb+a(iter)+ for the  \verb+iter+-th grid entry, the next starting point is chosen as: 
+
+\begin{verbatim}
+  switch newton_update
+    case 'null'
+      start_point_i = a(iter);
+    case 'lin_spacing'
+      start_point_i = a(iter)+ 1i*spacing;
+    case 'sqrt_spacing'
+      start_point_i = a(iter)+ 1i*sqrt(spacing);
+  end
+\end{verbatim}
+Here \verb+spacing+ equals the first spacing of the grid, (which is assumed to be uniform). 
+\end{itemize}
+
+Example: 
+
+\begin{verbatim}
+t =[1; 2; 4; 6; 9];
+w = ones(length(t),1)/length(t);
+gamma = 1/10;
+[grid, density] = compute_esd_newton(t,w,gamma);
+\end{verbatim}
 
 \subsection{Moments and Quantiles of the ESD}
 
+We provide a few useful functions to directly evaluate the moments and quantiles of the ESD. Suppose we computed the density of the ESD on a grid:
+
+\begin{verbatim}
+  [grid, density,~, ~, mass_at_0] =  compute_esd_ode_non_atomic(t, w, gamma, r,w_int,epsi);
+\end{verbatim}
+
+Let \verb+h+ be an anonymous function such as \verb+@(x)x+. Then, it is easy to compute the integral of \verb+h+ against the density by calling 
+
+\begin{verbatim}
+  mom =  esd_moment_grid(grid,density,mass_at_0,h);
+\end{verbatim}
+
+This returns the computed moment, which is an approximation to $\int h(x)\, dF(x)$, where $F$ is the ESD. The approximation is found using trapezoidal integration.
+
+Similarly, the \verb+q+-th quantile, and the mode can be computed with: 
+
+\begin{verbatim}
+  quantile = esd_quantile_grid(grid,density,mass_at_0,q);
+  mode = esd_mode_grid(grid,density);
+\end{verbatim}
+
 \subsection{Utilities}
 
-\subsubsection{Arithmetic and geometric models for eigenvalues}
+We provide some utilities for generating simulations  when working with spectral distributions. 
 
+\subsubsection{Arithmetic model for eigenvalues}
+
+The arithmetic model for eigenvalues was used in \cite{dobriban2015precise} as an example for identifying the support edges. In this model the eigenvalues and the weights are each defined in terms of arithmetic progressions
+
+\begin{equation*}
+\label{arithmetic_model}
+H = \sum_{j=0}^{J-1} (a + jb) \delta_{c+jd}.
+\end{equation*}
+
+
+The eigenvalues are placed at $c+jd$, for some $c>0$ and $d \in \mathbb{R}$ such that $c+jd>0$ for all $j$. They have weights $a + jb$ for some $a,b>0$. The constants $a$, $b$ are constrained so that the sum of the weights is 1. This is a flexible model giverned by only three parameters. If the arithmetic progressions move in opposite directions, that is $b>0$ and $d<0$, then most eigenvalues are small, but there are a few small clusters of large eigenvalues.
+
+We provide a function to generate the components $t,w$ of an arithmetic model, based on an alternative parametrization:
+
+\begin{verbatim}
+  [t, w]  = arithmetic_model(K, t_min,t_max,gap)
+\end{verbatim}
+
+The input parameters are 
+
+\begin{itemize}
+\item \verb+K+:  The number of components.
+\item \verb+t_min,t_max+:  The upper and lower bounds of the arithmetic sequence of the eigenvalues. The eigenvalues are located uniformly between the two eindpoints.
+\item \verb+gap+: The gap, or step size of the arithmetic sequence of the weights. Since the weights sum to 1, they are uniquely determined by the step size. Since the weights must be positive, the constraint \verb+K*(K-1)*gap /2 <1+ must hold. 
+\end{itemize}
+
+The outputs are the locations of the eigenvalues $t$, and their weights $w$. 
+Example:
+
+\begin{verbatim}
+gap = 0.01;
+t_min = 2;
+t_max = 11;
+K = 10;
+[t,w]  = arithmetic_model(K, t_min,t_max,gap);
+\end{verbatim}
+
+\section{Fractals and Newton's method}
+
+The  folder \verb+\Experiments\Fractals+  contains supplementary information on the complex dynamics of methods (fixed-point and Newton's method) for solving the Silverstein-Marchenko-Pastur equation. We provide scripts to compute the Julia sets of iterative methods for 
+this problem. These scripts are written in the commercial language UltraFractal, and were tested on version 5.04. 
+
+There are two folders, corresponding to the Fixed Point and Newton Methods.
+
+\subsection{ ./Fixed Point Method}
+\begin{itemize}
+\item \verb+./MP_Iter_Sol.ufm+ - This contains an UltraFractal formula. It programs the fixed
+point iteration method for a population spectrum $H = \frac{1}{2}(\delta_1 + \delta_{10})$.
+\item \verb+./MP_Iter_Julia_Set.png+ - This is a picture showing the Julia set of the dynamical
+system. The Julia set (white) belongs to the negative complex half-lane $\{z: im(z)<0\}$, which
+confirms empirically that the method converges for $z$ with positive imaginary part.
+
+\begin{figure}
+\centering
+  \includegraphics[scale=1]{"../Experiments/Fractals/Fixed Point Method/MP_Iter_Julia_Set"}
+\caption{Julia set of Fixed Point Method.}
+\label{fig1}
+\end{figure}
+
+\end{itemize}
+
+\subsection{ ./Newton Method}
+\begin{itemize}
+\item \verb+./MP_newton.ufm+ - This contains an UltraFractal formula. It programs Newton's 
+method for a population spectrum $H =\delta_1$.
+\item \verb+./high_resolution_MP_null.png+ - This is a picture showing the Julia set of the dynamical
+system. The Julia set is now a complicated-looking fractal. This provides empirical
+support for our claims in the accompanying paper that Newton's method is numerically sensitive.
+\end{itemize}
+
+\begin{figure}
+\centering
+  \includegraphics[scale=1]{"../Experiments/Fractals/Newton Method/high_resolution_MP_null"}
+\caption{Julia set of Newton Method.}
+\label{fig1}
+\end{figure}
 
 \bibliography{eigenvalues}
 \bibliographystyle{apalike}

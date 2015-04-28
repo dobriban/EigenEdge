@@ -16,11 +16,11 @@ MP_density = @(x) 1/(2*pi*gamma)* sqrt(max((gamma_plus-x).*(x-gamma_minus),0))./
 
 for i=1:length(epsi_array);
     epsilon = 10.^(-epsi_array(i));
-    %ODE
+    %Atomic
     tic
     [grid,density_ode] =  compute_esd_ode(t,w,gamma,epsilon);
     times(i,1) = toc;
-    fprintf('Test %d/%d: For accuracy %2.2e, ODE method took %2.2f seconds\n',i,length(epsi_array), epsilon, times(i,1));
+    fprintf('Test %d/%d: For accuracy %2.2e, Atomic method took %2.2f seconds\n',i,length(epsi_array), epsilon, times(i,1));
     
     %Iter
     multiplier_num_iter = 1;
@@ -35,13 +35,15 @@ for i=1:length(epsi_array);
     errors(i,2)= mean(density_fp-theor_density);
 end
 
+%to save time when editing the figure associated with these results, I have
+%saved the data to disk. These can be re-loaded to generate a new figure.
 %%
-save('timing_experiment_results_identity.mat');
+%save('timing_experiment_results_identity.mat');
 %%
 load('timing_experiment_results_identity.mat');
 
 %%
-rng(0);
+rng(1);
 figure
 a = {'--','-.','-','-.'};
 
@@ -54,14 +56,15 @@ set(h,'LineStyle',a{1});
 c2 = rand(1,3);
 h = plot(log10(times(:,2)),'linewidth',3,'color',c2);
 set(h,'LineStyle',a{2});
-set(gca,'fontsize',14)
+set(gca,'fontsize',20)
 xlabel('-log_{10}(\epsilon)')
 ylabel('t(\epsilon)');
+xlim([1 length(times(:,1))]);
 
 %xlabel('Correct Sig. Digits Requested');
 %ylabel('Log10 Running time');
-h = legend('ODE','Iter','location','Best');
-set(h,'FontSize',14);
+h = legend('Atomic','FP','location','Best');
+set(h,'FontSize',20);
 
 
 subplot(1,2,2), hold on
@@ -69,14 +72,16 @@ h = plot(log10(errors(:,1)),'linewidth',3,'color',c1);
 set(h,'LineStyle',a{1});
 h = plot(log10(errors(:,2)),'linewidth',3,'color',c2);
 set(h,'LineStyle',a{2});
-set(gca,'fontsize',14)
+set(gca,'fontsize',20)
 
 xlabel('-log_{10}(\epsilon)')
 ylabel('\Delta(\epsilon)');
+xlim([1 length(times(:,1))]);
+
 %xlabel('Correct Sig Digits  Requested');
 %ylabel('Correct Sig Digits  Produced');
-h = legend('ODE','Iter','location','Best');
-set(h,'FontSize',14);
+%h = legend('Atomic','FP','location','Best');
+%set(h,'FontSize',20);
 
 %% save plot
 filename = sprintf( './Timing_tests_numerical_error_null.png');
@@ -98,11 +103,11 @@ errors = zeros(length(epsi_array),2);
 
 for i=1:length(epsi_array);
     epsilon = 10.^(-epsi_array(i));
-    %ODE
+    %Atomic
     tic
     [grid,density_ode] = compute_esd_ode(t,w,gamma,epsilon);
     times(i,1) = toc;
-    fprintf('Test %d/%d: For accuracy %2.2e, ODE method took %2.2f seconds\n',i,length(epsi_array), epsilon, times(i,1));
+    fprintf('Test %d/%d: For accuracy %2.2e, Atomic method took %2.2f seconds\n',i,length(epsi_array), epsilon, times(i,1));
     
     %Iter
     n = floor(p/gamma);
@@ -110,7 +115,7 @@ for i=1:length(epsi_array);
     tic
     [density_fp] = compute_esd_fp(t,w,gamma,epsilon,grid,multiplier_num_iter);
     times(i,2) = toc;
-    fprintf('Test %d/%d: For accuracy %2.2e, Iter method took %2.2f seconds\n',i,length(epsi_array), epsilon, times(i,2));
+    fprintf('Test %d/%d: For accuracy %2.2e, Fixed Point method took %2.2f seconds\n',i,length(epsi_array), epsilon, times(i,2));
     
     %store errors
     [m_theor] = SparseStieltjes2(grid,gamma,1/2,tau);
@@ -121,11 +126,11 @@ end
 
 
 %%
-save('timing_experiment_results_two-point.mat');
+%save('timing_experiment_results_two-point.mat');
 %%
 load('timing_experiment_results_two-point.mat');
 %%
-rng(0);
+rng(1);
 figure
 a = {'--','-.','-','-.'};
 
@@ -138,13 +143,14 @@ set(h,'LineStyle',a{1});
 c2 = rand(1,3);
 h = plot(log10(times(:,2)),'linewidth',3,'color',c2);
 set(h,'LineStyle',a{2});
-set(gca,'fontsize',14)
+set(gca,'fontsize',20)
 xlabel('-log_{10}(\epsilon)')
 ylabel('t(\epsilon)');
+xlim([1 length(times(:,1))]);
 %xlabel('Correct Sig. Digits Requested');
 %ylabel('Log10 Running time');
-h = legend('ODE','Iter','location','Best');
-set(h,'FontSize',14);
+%h = legend('Atomic','FP','location','Best');
+%set(h,'FontSize',20);
 
 
 subplot(1,2,2), hold on
@@ -152,14 +158,16 @@ h = plot(log10(errors(:,1)),'linewidth',3,'color',c1);
 set(h,'LineStyle',a{1});
 h = plot(log10(errors(:,2)),'linewidth',3,'color',c2);
 set(h,'LineStyle',a{2});
-set(gca,'fontsize',14)
+set(gca,'fontsize',20)
 
 xlabel('-log_{10}(\epsilon)')
 ylabel('\Delta(\epsilon)');
+xlim([1 length(times(:,1))]);
+
 %xlabel('Correct Sig Digits  Requested');
 %ylabel('Correct Sig Digits  Produced');
-h = legend('ODE','Iter','location','Best');
-set(h,'FontSize',14);
+h = legend('Atomic','FP','location','NorthEast');
+set(h,'FontSize',20);
 
 
 %% save plot

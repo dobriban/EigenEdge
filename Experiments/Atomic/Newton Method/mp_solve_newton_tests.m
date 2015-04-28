@@ -13,9 +13,9 @@ ind = density<Inf;
 h = plot(grid, density/max(density(ind)),'r');
 set(h,'Linewidth',3)
 xlabel('Eigenvalue');
-set(gca,'fontsize',14)
+set(gca,'fontsize',20)
 h = legend( 'population SD','density','Location','best');
-set(h,'FontSize',14);
+set(h,'FontSize',20);
 %
 filename = sprintf( './newton_method_bad_case.png');
 saveas(gcf, filename,'png');
@@ -32,11 +32,11 @@ hist(t,20)
 h = plot(grid, density/max(density),'r');
 set(h,'Linewidth',3)
 xlabel('Eigenvalue');
-set(gca,'fontsize',14)
+set(gca,'fontsize',20)
 h = legend('population SD','density','Location','best');
-set(h,'FontSize',14);
+set(h,'FontSize',20);
 
-%
+% 
 filename = sprintf( './newton_method_good_case.png');
 saveas(gcf, filename,'png');
 fprintf(['Saved Results to ' filename '\n']);
