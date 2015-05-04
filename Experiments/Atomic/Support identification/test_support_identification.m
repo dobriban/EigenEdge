@@ -67,6 +67,7 @@ ylabel('log_{10}(\Delta_l)');
 set(gca,'fontsize',20)
 h = legend('\gamma = 1/2^5','\gamma = 1/2^4','\gamma = 1/2^3','\gamma = 1/2^2');
 set(h,'FontSize',20);
+xlim([min(-log10(epsi_array)), max(-log10(epsi_array))]);
 
 subplot(1,2,2), hold on
 h = plot(-log10(epsi_array),log10(u_err(:,1)),'linewidth',2); set(h,'LineStyle',a{1});
@@ -78,6 +79,7 @@ ylabel('log_{10}(\Delta_u)');
 set(gca,'fontsize',20)
 h = legend('\gamma = 1/2^5','\gamma = 1/2^4','\gamma = 1/2^3','\gamma = 1/2^2');
 set(h,'FontSize',20);
+xlim([min(-log10(epsi_array)), max(-log10(epsi_array))]);
 
 %%
 filename = sprintf( './identify_endpoints_support.png');

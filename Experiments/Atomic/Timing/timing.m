@@ -8,7 +8,7 @@ epsi_array = linspace(1,K,K);
 t = 1;
 w = 1;
 rng(0)
-times = zeros(length(epsi_array),2);
+% times = zeros(length(epsi_array),2);
 errors = zeros(length(epsi_array),2);
 gamma_plus = (1+sqrt(gamma))^2;
 gamma_minus = (1-sqrt(gamma))^2;
@@ -63,7 +63,7 @@ xlim([1 length(times(:,1))]);
 
 %xlabel('Correct Sig. Digits Requested');
 %ylabel('Log10 Running time');
-h = legend('Atomic','FP','location','Best');
+h = legend('Atomic','FPA','location','Best');
 set(h,'FontSize',20);
 
 
@@ -80,7 +80,7 @@ xlim([1 length(times(:,1))]);
 
 %xlabel('Correct Sig Digits  Requested');
 %ylabel('Correct Sig Digits  Produced');
-%h = legend('Atomic','FP','location','Best');
+%h = legend('Atomic','FPA','location','Best');
 %set(h,'FontSize',20);
 
 %% save plot
@@ -149,7 +149,7 @@ ylabel('t(\epsilon)');
 xlim([1 length(times(:,1))]);
 %xlabel('Correct Sig. Digits Requested');
 %ylabel('Log10 Running time');
-%h = legend('Atomic','FP','location','Best');
+%h = legend('Atomic','FPA','location','Best');
 %set(h,'FontSize',20);
 
 
@@ -166,7 +166,7 @@ xlim([1 length(times(:,1))]);
 
 %xlabel('Correct Sig Digits  Requested');
 %ylabel('Correct Sig Digits  Produced');
-h = legend('Atomic','FP','location','NorthEast');
+h = legend('Atomic','FPA','location','NorthEast');
 set(h,'FontSize',20);
 
 
