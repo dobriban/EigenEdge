@@ -1,4 +1,4 @@
-function pa = parseSpecArgumentsAtomic(varargin)
+function pa = parseArgumentsSpectrode(varargin)
 %parses arguments in varargin; specifically designed for Atomic
 %validation is a binary - specifies if validation is attempted
 
@@ -10,8 +10,8 @@ pa = inputParser;
 
 
 %algorithms and parameters
-defaultAlg = 'atomic';
-expectedAlgs = {'atomic','fp','Newton'};
+defaultAlg = 'spectrode';
+expectedAlgs = {'spectrode','fp','Newton'};
 w = [];
 r = [];
 w_int = [];

@@ -83,7 +83,7 @@
 \tableofcontents
 \section{Introduction}
 
-The \textsc{EigenEdge} MATLAB package contains open source implementations of methods for working with eigenvalue distributions of large random matrices of the covariance type. In particular, it contains the \textsc{Atomic} method to compute the limit empirical spectrum of sample covariance matrices \citep[proposed in][]{dobriban2015precise}. 
+The \textsc{EigenEdge} MATLAB package contains open source implementations of the author's methods for working with eigenvalue distributions of large random matrices of the covariance type. In particular, it contains the \textsc{Spectrode} method to compute the limit empirical spectrum of sample covariance matrices \citep[proposed in][]{dobriban2015precise}. 
 
 \begin{itemize}
 \item{Version: } 0.0.1
@@ -92,7 +92,7 @@ The \textsc{EigenEdge} MATLAB package contains open source implementations of me
 \item{License: } \verb+GPL-3+
 \end{itemize}
 
-In addition, this package contains the code to reproduce all simulation results from the paper \cite{dobriban2015precise}. These are contained in the \verb+\Experiments\Atomic+ folder.
+In addition, this package contains the code to reproduce all simulation results from the paper \cite{dobriban2015precise}. These are contained in the \verb+\Experiments\Spectrode+ folder.
 
 \section{Installation}
 
@@ -109,7 +109,7 @@ An example computation is in the \verb+\Experiments\Examples\example.m+ file. Th
 \section{Example}
 \label{example}
 
-Here we give a simple example of using the \textsc{Atomic} function for computing limit spectra of sample covariance matrices. We refer to the paper \cite{dobriban2015precise} for a full description of the method. The code for reproducing this example is available in the \verb+\Experiments\Examples\example.m+ file in our package. 
+Here we give a simple example of using the \textsc{Spectrode} function for computing limit spectra of sample covariance matrices. We refer to the paper \cite{dobriban2015precise} for a full description of the method. The code for reproducing this example is available in the \verb+\Experiments\Examples\example.m+ file in our package. 
 
 \subsection{Background}
 
@@ -123,7 +123,7 @@ If $n$ and $p$ are of comparable size, then $\widehat{\Sigma}$ deviates substant
 
 \subsection{Quick example}
 
-The \textsc{Atomic} method is designed to compute the limit sample spectrum $F$ from the limit population spectrum $H$. It is easy to use: in its simplest form, we need to provide a vector of population eigenvalues \verb+t+ (in this case $H$ is a uniform mixture of point masses at $t_i$), and an aspect ratio $\verb+gamma+$, and call $\verb+atomic(t,gamma)+$. \textsc{Atomic} will return a grid and pointwise density estimates of the limit spectrum $F$ on this grid. 
+The \textsc{Spectrode} method is designed to compute the limit sample spectrum $F$ from the limit population spectrum $H$. It is easy to use: in its simplest form, we need to provide a vector of population eigenvalues \verb+t+ (in this case $H$ is a uniform mixture of point masses at $t_i$), and an aspect ratio $\verb+gamma+$, and call $\verb+spectrode(t,gamma)+$. \textsc{Spectrode} will return a grid and pointwise density estimates of the limit spectrum $F$ on this grid. 
 
 The code below (excerpted from \verb+\Experiments\Examplesexample.m+) shows an example, in which the eigenvalues are placed at \verb+t = [1; 5]+, and the aspect ratio \verb+gamma = 1/2+:
 
@@ -131,7 +131,7 @@ The code below (excerpted from \verb+\Experiments\Examplesexample.m+) shows an e
 \begin{verbatim}
 t = [1; 5]; %location of population eigenvalues: H = 1/n\sum delta_{t_i}
 gamma = 1/2; %aspect ratio gamma = p/n
-[grid, density] =  atomic(t, gamma); %compute limit spectrum
+[grid, density] =  spectrode(t, gamma); %compute limit spectrum
 \end{verbatim}
 
 The density can be plotted with 
@@ -164,38 +164,38 @@ Specifically, we set $H$ a mixture
 H = \sum_{i=1}^{J} w_i \delta_{t_i} + \sum_{t=1}^{T} w^*_t U_{a_t,b_t} ,
 \end{equation*}
 
-with $J=10$ population point masses at $t_1=2$,$t_2=3,\ldots,t_{10}=11$ with weights forming an arithmetic progression with step $r = 0.005$: $w_1=0.0275, w_2=0.0325$,$\ldots, w_{10}=0.0725$. The second component, with weight $w^*_1=1/2$, is a uniform distribution - or a `boxcar' - on $[a_1,b_1]=[0.5,1.5]$.  We also set $\gamma=0.01$.
+with $J=10$ population point masses at $t_1=2$,$t_2=3,\ldots,t_{10}=11$ with weights forming an Comb progression with step $r = 0.005$: $w_1=0.0275, w_2=0.0325$,$\ldots, w_{10}=0.0725$. The second component, with weight $w^*_1=1/2$, is a uniform distribution - or a `boxcar' - on $[a_1,b_1]=[0.5,1.5]$.  We also set $\gamma=0.01$.
 
 
 \begin{figure}
 \centering
   \includegraphics[scale=0.45]{"../Experiments/Examples/Illustration_mixture_3"}
-\caption{Boxcar + point mass mixture example: \textsc{Atomic} computes  the density of the limit spectrum (normalized to have maximum equal to 1 for display purposes).}
+\caption{Boxcar + point mass mixture example: \textsc{Spectrode} computes  the density of the limit spectrum (normalized to have maximum equal to 1 for display purposes).}
 \label{example_2}
 \end{figure}
 
-The density of the limit empirical spectrum is shown in Figure \ref{example_2}. The computation takes a few seconds on a desktop computer. \emph{A priori} it is not obvious how many clusters there are in the SD and what their shape and geometric properties are. \textsc{Atomic} provides a precise approximation of the density of the limit spectrum. From this several insights can be derived: there are 11 clusters in total, and the two rightmost ones just barely separate; the height of the clusters decreases while the width of the point-mass clusters increases.
+The density of the limit empirical spectrum is shown in Figure \ref{example_2}. The computation takes a few seconds on a desktop computer. \emph{A priori} it is not obvious how many clusters there are in the SD and what their shape and geometric properties are. \textsc{Spectrode} provides a precise approximation of the density of the limit spectrum. From this several insights can be derived: there are 11 clusters in total, and the two rightmost ones just barely separate; the height of the clusters decreases while the width of the point-mass clusters increases.
 
 We will now explain how to compute this example with our software. This code is also available in the \verb+\Experiments\Examples\example.m+ file.  
 
-First we should generate the parameters of the spectrum. We represent atomic distributions by two vectors: one for the locations of the eigenvalues, and one for the weights of the corresponding point masses. These will be denoted by \verb+w,t+, respectively. In our paper, we introduced an arithmetic model for eigenvalues 
+First we should generate the parameters of the spectrum. We represent atomic distributions by two vectors: one for the locations of the eigenvalues, and one for the weights of the corresponding point masses. These will be denoted by \verb+w,t+, respectively. In our paper, we introduced the comb model for eigenvalues 
 
 
 \begin{equation*}
-\label{arithmetic_model}
+\label{Comb_model}
 H_{\mathrm{atomic}} = \sum_{j=0}^{J-1} (a + jb) \delta_{c+jd}.
 \end{equation*}
 
 The eigenvalues are placed at $c+jd$, for some $c>0$ and $d \in \mathbb{R}$ such that $c+jd>0$ for all $j$. They have weights $a + jb$ for some $a,b>0$. The constants $a$, $b$ are constrained so that the sum of the weights is 1, thus only one of them, say $b$, is a free parameter. This is a flexible model giverned by only three parameters. 
 
-We provide a specialized function \verb+arithmetic_model()+ to easily generate the corresponding vectors $t,w$. This function is parametrized in the following way: the arithmetic sequence $t$ is specified by its smallest and largest elements \verb+t_min,t_max+, and the length of the sequence \verb+J+. The weights are specified by the \emph{increment} between the weights, called \verb+gap+ in the example below. This parameter is enough to determine them uniquely, because they have the additional constraint that they sum to 1. In our case, it turns out that the gap was initially $0.01$. The syntax to accomplish this is:
+We provide a specialized function \verb+comb_model()+ to easily generate the corresponding vectors $t,w$. This function is parametrized in the following way: the arithmetic sequence $t$ is specified by its smallest and largest elements \verb+t_min,t_max+, and the length of the sequence \verb+J+. The weights are specified by the \emph{increment} between the weights, called \verb+gap+ in the example below. This parameter is enough to determine them uniquely, because they have the additional constraint that they sum to 1. In our case, it turns out that the gap was initially $0.01$. The syntax to accomplish this is:
 
 \begin{verbatim}
 gap = 0.01;
 t_min = 2;
 t_max = 11;
 K = 10;
-[t,w]  = arithmetic_model(K, t_min,t_max,gap);
+[t,w]  = comb_model(K, t_min,t_max,gap);
 \end{verbatim}
 
  Further, we should remember that the atoms will account for only 1/2 of the entire mass, therefore we must multiply the weights by 1/2: \verb+w = 1/2*w;+
@@ -207,11 +207,11 @@ r = [0.5 1.5];
 w_int = 1/2;
 \end{verbatim}
 
-Next, we set \verb+\gamma = 0.01+. Finally, we set the accuracy parameter \verb+\varepsilon = 1e-5;+. We can now call the \verb+atomic()+ function to compute the density of the limit spectrum. In addition the parameters  \verb+grid, density+ that we already saw in the first example, and which are the main results of the computation,  \verb+atomic()+ also returns \verb+K_hat, l_hat, u_hat+, which are numerical approximations to the number of clusters in the support, and the lower/upper endpoints:
+Next, we set \verb+\gamma = 0.01+. Finally, we set the accuracy parameter \verb+\varepsilon = 1e-5;+. We can now call the \verb+spectrode()+ function to compute the density of the limit spectrum. In addition the parameters  \verb+grid, density+ that we already saw in the first example, and which are the main results of the computation,  \verb+spectrode()+ also returns \verb+K_hat, l_hat, u_hat+, which are numerical approximations to the number of clusters in the support, and the lower/upper endpoints:
 
 
 \begin{verbatim}
-[grid, density,~, ~, ~, K_hat, l_hat, u_hat] =  atomic(t, gamma, w, r,w_int,epsi);
+[grid, density,~, ~, ~, K_hat, l_hat, u_hat] =  spectrode(t, gamma, w, r,w_int,epsi);
 \end{verbatim}
 
 In this example \verb+K_hat = 11+, so the clusters are apparently disjoint. 
@@ -248,11 +248,11 @@ h = legend( 'Empirical Eigenvalues','Theoretical Prediction','Location','best');
 set(h,'FontSize',14);
 \end{verbatim}
 
-This finishes the advanced example use of the \verb+Atomic+ function. 
+This finishes the advanced example use of the \verb+Spectrode+ function. 
 
 \subsection{More examples: Reproducing the results of \cite{dobriban2015precise}}
 
-Several more reproducible examples are provided with the software package. These include the computational results presented in the paper \cite{dobriban2015precise}, which are found in the folder \verb+\Experiments\Atomic+. 
+Several more reproducible examples are provided with the software package. These include the computational results presented in the paper \cite{dobriban2015precise}, which are found in the folder \verb+\Experiments\Spectrode+. 
 
 The examples include (and their locations are the following folders):
 
@@ -260,7 +260,7 @@ The examples include (and their locations are the following folders):
 \item Support identification of the sample spectrum: \verb+\Support identification+
 \item Accuracy of computing the density with various algorithms: \verb+\Test correctness+
 \item Timing comparisons of various algorithms: \verb+\Timing+ 
-\item Newton's method: \verb+\Newton method+
+%\item Newton's method: \verb+\Newton method+
 \end{enumerate}
 
 
@@ -271,11 +271,11 @@ The examples include (and their locations are the following folders):
 \subsection{Atomic: computing the limit spectrum}
 \label{atomic_description}
 
-The \textsc{Atomic} method computes the limit sample spectrum of covariance matrices from the limit population spectrum. The  main user interface for this computation is \verb+atomic()+. This function takes as input the population spectral distribution $H$, aspect ratio $\gamma$, and other parameters, and computes the density of the limit spectrum on a grid. 
+The \textsc{Spectrode} method computes the limit sample spectrum of covariance matrices from the limit population spectrum. The  main user interface for this computation is \verb+spectrode()+. This function takes as input the population spectral distribution $H$, aspect ratio $\gamma$, and other parameters, and computes the density of the limit spectrum on a grid. 
 
 The basic syntax of this function is :
 
-$$\verb+[grid, density]= atomic(t,gamma)+$$
+$$\verb+[grid, density]= spectrode(t,gamma)+$$
 
 In the basic setup, it requires only two inputs: 
 \begin{itemize}
@@ -293,13 +293,13 @@ The outputs are:
 
 The complete syntax of the function is:
 
-$$\verb+[grid, density,m, v, mass_at_0, K_hat, l_hat, u_hat, x, f_hat]= atomic(t,gamma,varargin)+$$
+$$\verb+[grid, density,m, v, mass_at_0, K_hat, l_hat, u_hat, x, f_hat]= spectrode(t,gamma,varargin)+$$
 
 Here, in addition to the above two arguments \verb+t,gamma+, a much larger set of input arguments can be specified within \verb+varargin+. A complete call, including all parameters, looks like:
 
-$$\verb+atomic(t, gamma, w, r, w_int, epsilon, M, alg)+$$
+$$\verb+spectrode(t, gamma, w, r, w_int, epsilon, M, alg)+$$
 
-The extra arguments \verb+w, r, w_int, epsilon,M+ are optional. You can specify any subset of them, however, you must always use them in this order. If you wish to specify some later arguments, and leave some earlier ones default, then place an empty array \verb+[]+ in their place. For instance, to specify \verb+epsilon = 1e-6+ without specifying \verb+w+ etc, call  \verb+atomic(t,gamma,[],[],[],1e-6)+.
+The extra arguments \verb+w, r, w_int, epsilon,M+ are optional. You can specify any subset of them, however, you must always use them in this order. If you wish to specify some later arguments, and leave some earlier ones default, then place an empty array \verb+[]+ in their place. For instance, to specify \verb+epsilon = 1e-6+ without specifying \verb+w+ etc, call  \verb+spectrode(t,gamma,[],[],[],1e-6)+.
   
 The inputs specify the population spectrum $H$ as a mixture of point masses and uniform distributions:
 
@@ -308,7 +308,7 @@ The inputs specify the population spectrum $H$ as a mixture of point masses and 
 H = \sum_{i=1}^{J} w_i \delta_{t_i} + \sum_{t=1}^{T} w^*_t U(a_t,b_t)  .
 \end{equation*}
 
-Here $\delta_t$ is the point mass at $t$ and $U(a,b)$ is the uniform distribution on $[a,b]$. The parameters of the mixture can be set using the parameters of \verb+atomic()+, which are, in order:
+Here $\delta_t$ is the point mass at $t$ and $U(a,b)$ is the uniform distribution on $[a,b]$. The parameters of the mixture can be set using the parameters of \verb+spectrode()+, which are, in order:
 
 \begin{itemize}
 \item \verb+t+:  a vector of positive entries, the locations of the population eigenvalues (length $J$)
@@ -320,7 +320,7 @@ Here $\delta_t$ is the point mass at $t$ and $U(a,b)$ is the uniform distributio
 \item \verb+w_int+:   weights of the continuous part of the spectrum. This must be a non-negative vector. The entry \verb+w_int[t]+ specifies the weights of the $i$-th continuous component of the spectrum, a uniform distribution on $[a_t,b_t]$. If this is empty, then the defualt value is a uniform distribution subject to the constraint \verb+sum(w)+sum(w\_int) =1+.
 \item \verb+epsilon+: accuracy parameter. As the accuracy parameter $\varepsilon \to 0$, the density approximation becomes more accurate. However, only the convergence of the procedure is guaranteed, not the actual accuracy. 
 \item \verb+M+:  number of grid points in each interval of the support. This is an additional parameter which allows the user to specify how many grid points should be used in each interval in the support of the sample spectrum. This is available for additonal flexibility. 
-\item \verb+alg+: The algorithm used to compute the density. The available choices are \verb+ {'atomic','fp','newton'};+. These stand for: \verb+ 'atomic'+ is the \textsc{Atomic} algorithm proposed in \cite{dobriban2015precise}, \verb+ 'fp'+ is the fixed point method described in \cite{couillet2011deterministic}, and \verb+ 'newton'+ is Newton's method, which the author learned from Jack W. Silverstein, and which is described in \cite{dobriban2015precise}. Please see that paper for more information on each method. 
+\item \verb+alg+: The algorithm used to compute the density. The available choices are \verb+ {'spectrode','fp','newton'};+. These stand for: \verb+'spectrode'+ is the \textsc{Spectrode} algorithm proposed in \cite{dobriban2015precise}, \verb+ 'fp'+ is the fixed point method described in \cite{couillet2011deterministic}, and \verb+ 'newton'+ is Newton's method, which the author learned from Jack W. Silverstein, and which is described in \cite{dobriban2015precise}. Please see that paper for more information on each method. 
 \end{itemize}
 
 The outputs \verb+[grid, density,m, v, mass_at_0, K_hat, l_hat, u_hat, x, f_hat]+ are: 
@@ -332,7 +332,7 @@ The outputs \verb+[grid, density,m, v, mass_at_0, K_hat, l_hat, u_hat, x, f_hat]
 \item \verb+v+: pointwise numerical approximations to the companion Stieltjes transform of the Empirical Spectral Distribution $M$ on the \verb+grid+
 \end{itemize}
 
-Special outputs that are produced only if the method \verb+'alg'+ is Atomic: 
+Special outputs that are produced only if the method \verb+'alg'+ is \textsc{Spectrode}: 
 \begin{itemize}
 \item \verb+mass_at_0+: The mass at 0 of the ESD
 \item \verb+K_hat+: numerical approximation to number of disjoint clusters of support
@@ -348,9 +348,9 @@ Special outputs that are produced only if the method \verb+'alg'+ is Atomic:
 
 In addition to the main wrapper \textsc{Atomic}, we also provide direct access to the solvers for computing the limit spectrum. Thse have a standardized syntax similar to the main wrapper, but they can offer more flexibility. Further, each function has a base implementation for working only with mixtures of point masses, and a more sophisticated version that also handles mixtures of uniform distributions.
 
-\subsubsection{\textsc{Atomic}}
+\subsubsection{\sc{Spectrode}}
 
-The \textsc{Atomic} method can be accessed directly in the following way. The arguments have the same format and meaning as for the main \verb+atomic()+ function. 
+The \textsc{Spectrode} method can be accessed directly in the following way. The arguments have the same format and meaning as for the main \verb+spectrode()+ function. 
 
 \begin{verbatim}
 [grid, density, m, v, mass_at_0, K_hat, l_hat, u_hat, x, f_hat] = ...
@@ -366,7 +366,7 @@ gamma = 1/2;
 [grid, density,~, ~, mass_at_0] =  compute_esd_ode(t, w, gamma);
 \end{verbatim}
 
-The \textsc{Atomic} method allowing for uniform distributions (not just point masses) in the mixture can be accessed directly via
+The \textsc{Spectrode} method allowing for uniform distributions (not just point masses) in the mixture can be accessed directly via
 
 \begin{verbatim}
 [grid, density, m, v, mass_at_0, K_hat, l_hat, u_hat, x, f_hat] = ...
@@ -383,14 +383,14 @@ The fixed point method can be accessed directly in the following way:
     compute_esd_fp(t,w,gamma,epsilon, grid,multiplier_num_iter, maxIter,starting_point)
 \end{verbatim}
 
- The arguments mainly have the same format and meaning as for the main \verb+atomic()+ function, but there are some additions for extra flexibility:  
+ The arguments mainly have the same format and meaning as for the main \verb+spectrode()+ function, but there are some additions for extra flexibility:  
  
  The required inputs are: 
 \begin{itemize}
 \item \verb+t+:  a vector of positive entries, the locations of the population eigenvalues (length $J$)
 \item \verb+w+: mixture weights of the components of $t$ in the input spectrum. This must be a positive vector of size J. The default is a uniform vector of length $J$: $w = (1,1,\ldots,1)/J$.
 \item \verb+gamma+:  aspect ratio $\gamma = p/n$
-\item \verb+epsilon+: accuracy parameter. As the accuracy parameter $\varepsilon \to 0$, the density approximation becomes more accurate. However, only the convergence of the procedure is guaranteed, not the actual accuracy. A good default is $10^{-4}$. The default number of iterations is by default \verb+maxIter = multiplier_num_iter/epsilon;+
+\item \verb+epsilon+: accuracy parameter. As the accuracy parameter $\varepsilon \to 0$, the density approximation becomes more accurate. However, only the convergence of the procedure is guaranteed, not the actual accuracy. A good default is $10^{-4}$. The default number of iterations is by default \verb+maxIter+ \verb+ = multiplier_num_iter/epsilon;+
 \item \verb+grid+: a positive grid where the density is computed. 
 \end{itemize}
 
@@ -442,7 +442,7 @@ The parameters of this method are the same as for atomic distributions, except \
 
 \subsubsection{Newton's method}
 
-Newton's method method can be accessed directly in the following way. The arguments have the same format and meaning as for the main \verb+atomic()+ function. 
+Newton's method method can be accessed directly in the following way. The arguments have the same format and meaning as for the main \verb+spectrode()+ function. 
 
 \begin{verbatim}
  [grid, density, m, v, mass_at_0, K_hat, l_hat, u_hat, x, f_hat] = ...
@@ -504,22 +504,22 @@ Similarly, the \verb+q+-th quantile, and the mode can be computed with:
 
 We provide some utilities for generating simulations  when working with spectral distributions. 
 
-\subsubsection{Arithmetic model for eigenvalues}
+\subsubsection{Comb model for eigenvalues}
 
-The arithmetic model for eigenvalues was used in \cite{dobriban2015precise} as an example for identifying the support edges. In this model the eigenvalues and the weights are each defined in terms of arithmetic progressions
+The comb model for eigenvalues was used in \cite{dobriban2015precise} as an example for identifying the support edges. In this model the eigenvalues and the weights are each defined in terms of arithmetic progressions
 
 \begin{equation*}
-\label{arithmetic_model}
+\label{Comb_model}
 H = \sum_{j=0}^{J-1} (a + jb) \delta_{c+jd}.
 \end{equation*}
 
 
 The eigenvalues are placed at $c+jd$, for some $c>0$ and $d \in \mathbb{R}$ such that $c+jd>0$ for all $j$. They have weights $a + jb$ for some $a,b>0$. The constants $a$, $b$ are constrained so that the sum of the weights is 1. This is a flexible model giverned by only three parameters. If the arithmetic progressions move in opposite directions, that is $b>0$ and $d<0$, then most eigenvalues are small, but there are a few small clusters of large eigenvalues.
 
-We provide a function to generate the components $t,w$ of an arithmetic model, based on an alternative parametrization:
+We provide a function to generate the components $t,w$ of a comb model, based on an alternative parametrization:
 
 \begin{verbatim}
-  [t, w]  = arithmetic_model(K, t_min,t_max,gap)
+  [t, w]  = comb_model(K, t_min,t_max,gap)
 \end{verbatim}
 
 The input parameters are 
@@ -538,7 +538,7 @@ gap = 0.01;
 t_min = 2;
 t_max = 11;
 K = 10;
-[t,w]  = arithmetic_model(K, t_min,t_max,gap);
+[t,w]  = comb_model(K, t_min,t_max,gap);
 \end{verbatim}
 
 \section{Fractals and Newton's method}

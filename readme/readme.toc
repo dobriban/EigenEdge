@@ -9,12 +9,12 @@
 \contentsline {section}{\numberline {4}Computational methods}{6}{section.4}
 \contentsline {subsection}{\numberline {4.1}Atomic: computing the limit spectrum}{6}{subsection.4.1}
 \contentsline {subsection}{\numberline {4.2}Calling the solvers directly}{7}{subsection.4.2}
-\contentsline {subsubsection}{\numberline {4.2.1}\textsc {Atomic}}{8}{subsubsection.4.2.1}
+\contentsline {subsubsection}{\numberline {4.2.1}\sc {Spectrode}}{8}{subsubsection.4.2.1}
 \contentsline {subsubsection}{\numberline {4.2.2}Fixed point method}{8}{subsubsection.4.2.2}
 \contentsline {subsubsection}{\numberline {4.2.3}Newton's method}{9}{subsubsection.4.2.3}
 \contentsline {subsection}{\numberline {4.3}Moments and Quantiles of the ESD}{10}{subsection.4.3}
 \contentsline {subsection}{\numberline {4.4}Utilities}{10}{subsection.4.4}
-\contentsline {subsubsection}{\numberline {4.4.1}Arithmetic model for eigenvalues}{11}{subsubsection.4.4.1}
+\contentsline {subsubsection}{\numberline {4.4.1}Comb model for eigenvalues}{11}{subsubsection.4.4.1}
 \contentsline {section}{\numberline {5}Fractals and Newton's method}{11}{section.5}
 \contentsline {subsection}{\numberline {5.1} ./Fixed Point Method}{11}{subsection.5.1}
 \contentsline {subsection}{\numberline {5.2} ./Newton Method}{12}{subsection.5.2}

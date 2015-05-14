@@ -1,8 +1,8 @@
-%% examples for using the EigenEdge package, specifically, the Atomic function
+%% examples for using the EigenEdge package, specifically, the Spectrode function
 %% Quick example
 t = [1; 5]; %location of population eigenvalues: H = 1/n\sum delta_{t_i}
 gamma = 1/2; %aspect ratio gamma = p/n
-[grid, density] =  atomic(t, gamma); %compute limit spectrum
+[grid, density] =  spectrode(t, gamma); %compute limit spectrum
 figure, plot(grid, density,'r','LineWidth',4) %plot
 xlabel('Eigenvalue')
 ylabel('Density');
@@ -17,7 +17,7 @@ gap = 0.01;
 t_min = 2;
 t_max = 11;
 K = 10;
-[t,w]  = arithmetic_model(K, t_min,t_max,gap);
+[t,w]  = comb_model(K, t_min,t_max,gap);
 w = 1/2*w;
 
 r = [0.5 1.5];
@@ -25,7 +25,7 @@ w_int = 1/2;
 
 epsi = 10^(-5);
 gamma = 0.01;
-[grid, density,~, ~, ~, K_hat, l_hat, u_hat] =  atomic(t, gamma, w, r,w_int,epsi);
+[grid, density,~, ~, ~, K_hat, l_hat, u_hat] =  spectrode(t, gamma, w, r,w_int,epsi);
 
 %empirical eigenvalues
 rng(0);

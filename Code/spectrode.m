@@ -1,15 +1,15 @@
 function  [grid, density,m, v, mass_at_0, K_hat, l_hat, u_hat, x, f_hat]=...
-    atomic(t,gamma,varargin)
-% Main interface to the Atomic function for computing limit spectra of covariance matrices
+    spectrode(t,gamma,varargin)
+% Main interface to the Spectrode function for computing limit spectra of covariance matrices
 
 % Example Usage:
-% [grid, density] = atomic(t,gamma)
+% [grid, density] = Spectrode(t,gamma)
 % where:
 % t - a vector population eigenvalues >=0
 % gamma - aspect ratio p/n
 
 % For detailed usage, see attached documentation.
-% [grid, density] = atomics(t,gamma, `parameterName', `parameterValue',...) specifies additional parameters and options.
+% [grid, density] = Spectrodes(t,gamma, `parameterName', `parameterValue',...) specifies additional parameters and options.
 
 
 % The input spectrum is a mixture
@@ -37,7 +37,7 @@ function  [grid, density,m, v, mass_at_0, K_hat, l_hat, u_hat, x, f_hat]=...
 % v - numerical approximation to dual Stieltjes transform on real line,
 %       complex vector of size Nx1
 
-% Outputs only for atomic:
+% Outputs only for Spectrode:
 % mass_at_0 - discrete probability mass placed at 0 by the ESD
 % K_hat - numerical approximation to number of disjoint clusters of support
 % l_hat - lower endpoints of support intervals; real vector of size K_hat;
@@ -48,7 +48,7 @@ function  [grid, density,m, v, mass_at_0, K_hat, l_hat, u_hat, x, f_hat]=...
 % f_hat - numerical approximation of density on grid x; same format as x
 
 %% Process inputs
-pa = parseSpecArgumentsAtomic(varargin{:});
+pa = parseArgumentsSpectrode(varargin{:});
 
 parse(pa,t,gamma,varargin{:});
 q = pa.Results;
@@ -77,7 +77,7 @@ K_hat = NaN; l_hat = NaN; u_hat = NaN; x = NaN; f_hat = NaN;
 %% Perform computation
 
 switch q.alg
-    case 'atomic'
+    case 'spectrode'
         if isempty(q.r)
             [grid, density, m, v, mass_at_0, K_hat, l_hat, u_hat, x, f_hat] = ...
                 compute_esd_ode(q.t, q.w, q.gamma,q.epsilon,q.M);
@@ -103,9 +103,6 @@ switch q.alg
         else
             error('Newton method currently not available with non-atomic measures\n','Newton_non_atomic');
         end
-end
-if q.verbose >=2
-    fprintf(capture)
 end
 
 end

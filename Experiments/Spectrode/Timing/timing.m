@@ -16,11 +16,11 @@ MP_density = @(x) 1/(2*pi*gamma)* sqrt(max((gamma_plus-x).*(x-gamma_minus),0))./
 
 for i=1:length(epsi_array);
     epsilon = 10.^(-epsi_array(i));
-    %Atomic
+    %Spectrode
     tic
     [grid,density_ode] =  compute_esd_ode(t,w,gamma,epsilon);
     times(i,1) = toc;
-    fprintf('Test %d/%d: For accuracy %2.2e, Atomic method took %2.2f seconds\n',i,length(epsi_array), epsilon, times(i,1));
+    fprintf('Test %d/%d: For accuracy %2.2e, Spectrode method took %2.2f seconds\n',i,length(epsi_array), epsilon, times(i,1));
     
     %Iter
     multiplier_num_iter = 1;
@@ -63,7 +63,7 @@ xlim([1 length(times(:,1))]);
 
 %xlabel('Correct Sig. Digits Requested');
 %ylabel('Log10 Running time');
-h = legend('Atomic','FPA','location','Best');
+h = legend('Spectrode','FPA','location','Best');
 set(h,'FontSize',20);
 
 
@@ -80,7 +80,7 @@ xlim([1 length(times(:,1))]);
 
 %xlabel('Correct Sig Digits  Requested');
 %ylabel('Correct Sig Digits  Produced');
-%h = legend('Atomic','FPA','location','Best');
+%h = legend('Spectrode','FPA','location','Best');
 %set(h,'FontSize',20);
 
 %% save plot
@@ -103,11 +103,11 @@ errors = zeros(length(epsi_array),2);
 
 for i=1:length(epsi_array);
     epsilon = 10.^(-epsi_array(i));
-    %Atomic
+    %Spectrode
     tic
     [grid,density_ode] = compute_esd_ode(t,w,gamma,epsilon);
     times(i,1) = toc;
-    fprintf('Test %d/%d: For accuracy %2.2e, Atomic method took %2.2f seconds\n',i,length(epsi_array), epsilon, times(i,1));
+    fprintf('Test %d/%d: For accuracy %2.2e, Spectrode method took %2.2f seconds\n',i,length(epsi_array), epsilon, times(i,1));
     
     %Iter
     n = floor(p/gamma);
@@ -149,7 +149,7 @@ ylabel('t(\epsilon)');
 xlim([1 length(times(:,1))]);
 %xlabel('Correct Sig. Digits Requested');
 %ylabel('Log10 Running time');
-%h = legend('Atomic','FPA','location','Best');
+%h = legend('Spectrode','FPA','location','Best');
 %set(h,'FontSize',20);
 
 
@@ -166,7 +166,7 @@ xlim([1 length(times(:,1))]);
 
 %xlabel('Correct Sig Digits  Requested');
 %ylabel('Correct Sig Digits  Produced');
-h = legend('Atomic','FPA','location','NorthEast');
+h = legend('Spectrode','FPA','location','NorthEast');
 set(h,'FontSize',20);
 
 
