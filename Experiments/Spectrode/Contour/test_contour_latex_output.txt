@@ -1,0 +1,5 @@
+Results of Computing Contour Integrals
+
+$x$	 & 0 & -7.1292e-12 & 7.1292e-12\\ \hline 
+$\log(x)$	 & -0.34657 & -0.34655 & 2.2214e-05\\ \hline 
+$\log^2(x)$	 & NaN & 1.2111 & NaN\\ \hline 

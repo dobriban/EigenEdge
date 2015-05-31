@@ -1,0 +1,5 @@
+Results of Computing Moments
+
+$x$	 & 1 & 1 & 2.3308e-06\\ \hline 
+$\log(x)$	 & -0.30685 & -0.30684 & 1.4483e-05\\ \hline 
+$\log^2(x)$	 & NaN & 0.81724 & NaN\\ \hline 

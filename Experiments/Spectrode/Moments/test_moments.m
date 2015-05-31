@@ -1,35 +1,51 @@
-%Test moment computations for limit ESD
-%% Test correctness by computing theoretical and numerical solutions
-% Null case where all eigenvalues are equal to 1
-%first check that the density integrates to 1
-p = 200;
+%test the computation of moments of the standard MP law
+%compare against true values; print to file
 gamma = 1/2;
-epsi_array = [4,6,8];
+w = 1;
 t = 1;
-for i=1:3;
-    gamma_plus = (1+sqrt(gamma))^2;
-    gamma_minus = (1-sqrt(gamma))^2;
-    MP_density = @(x) 1/(2*pi*gamma)* sqrt(max((gamma_plus-x).*(x-gamma_minus),0))./x;
-    epsilon = 10.^(-epsi_array(i));
-    w = 1;
-    fun = @(x) 1;
-    integral_of_density(i) = esd_moment(t,w,gamma,fun,epsilon);
+epsilon = 1e-8;
+[grid, density,~, ~, mass_at_0] =  compute_esd_ode(t, w, gamma,epsilon);
+
+%%
+functions = {'x','\\log(x)','\\log^2(x)'};
+%%
+A = 3;
+num_val = zeros(A,1);
+true_val = zeros(A,1);
+%% x
+num_val(1) = esd_moment_grid(grid,density,mass_at_0,@(x)x);
+true_val(1) = 1;
+
+%% log x
+num_val(2) = esd_moment_grid(grid,density,mass_at_0,@(x)log(x));
+true_val(2) =  - 1 + (gamma - 1)/gamma*log(1-gamma);
+
+%% x* log x
+num_val(3) = esd_moment_grid(grid,density,mass_at_0,@(x)log(x).^2);
+true_val(3) = NaN;
+
+%%
+rel_err = abs(true_val-num_val);
+
+%% Latex
+%print high level statistics
+filename = ['test_moments_latex_output'];
+fileID = fopen([filename '.txt'],'w');
+
+fprintf(fileID,['Results of Computing Moments\n\n']);
+
+for i=1:A
+    str = sprintf('$%s$\t',functions{i});
+    fprintf(fileID,str);
+    fprintf(fileID,' & ');
+    fprintf(fileID,num2str(true_val(i)));
+    fprintf(fileID,' & ');
+    fprintf(fileID,num2str(num_val(i)));
+    fprintf(fileID,' & ');
+    fprintf(fileID,num2str(rel_err(i)));
+    fprintf(fileID,'\\\\ \\hline \n');
 end
 
-%% Null case where all eigenvalues are equal to 1
-%mean
-p = 200;
-gamma = 1/2;
-epsi_array = [4,6,8];
-t = 1;
-for i=1:3;
-    gamma_plus = (1+sqrt(gamma))^2;
-    gamma_minus = (1-sqrt(gamma))^2;
-    MP_density = @(x) 1/(2*pi*gamma)* sqrt(max((gamma_plus-x).*(x-gamma_minus),0))./x;
-    epsilon = 10.^(-epsi_array(i));
-    w = 1;
-    fun = @(x) x.^2;
-    mean(i) = esd_moment(t,w,gamma,fun,epsilon);
-end
 
-%For the null MP law, the mean=1, variance = gamma
+fclose(fileID);
+fprintf(['Saved Results to ./Results/' filename '.txt\n']);
