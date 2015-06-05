@@ -1,6 +1,6 @@
 function [grid, density, m, v, mass_at_0, K_hat, l_hat, u_hat, x, f_hat] = ...
   compute_esd_ode(t, w, gamma,epsilon,M)
-%Compute limit spectrum of covariance matrices with Newton method
+%Compute limit spectrum of covariance matrices with ODE method
 %uses the inverse of the Stieltjes transform obtained by Silverstein&Choi
 %(95) to determine the edges of the spectrum
 %

@@ -1,6 +1,6 @@
 function [density,m,v,numIter,lastStepSize,v_d] = ...
     compute_esd_fp(t,w,gamma,epsilon, grid,multiplier_num_iter, maxIter,starting_point)
-%Compute limit spectrum of covariance matrices with Newton method
+%Compute limit spectrum of covariance matrices with Fixed Point method
 
 %Inputs
 %t - population eigenvalues, non-negative vector of length p
