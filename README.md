@@ -10,7 +10,7 @@ of the covariance type.
 
 * a detailed documentation with examples (`\Readme`)
 * methods to compute the limit empirical spectrum of sample covariance matrices: **Spectrode**, fixed point and Newton. *Spectrode* is described in: 
-*Dobriban, E.* : Efficient Computation of Limit Spectra of Sample Covariance Matrices, submitted.  http://arxiv.org/abs/1507.01649
+*E. Dobriban* : Efficient Computation of Limit Spectra of Sample Covariance Matrices, submitted.  http://arxiv.org/abs/1507.01649
 * methods to compute arbitrary moments and quantiles of the limit spectrum 
 * Matlab scripts to reproduce all computational results of the above paper (see `\Experiments\Spectrode` folder)
 
