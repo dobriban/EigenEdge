@@ -11,9 +11,10 @@ Couillet, R., Debbah, M., and Silverstein, J.~W. (2011).
   multiple access channels.
 \newblock {\em Information Theory, IEEE Transactions on}, 57(6):3493--3514.
 
-\bibitem[Dobriban, 2015]{dobriban2015precise}
+\bibitem[Dobriban, 2015]{dobriban2015efficient}
 Dobriban, E. (2015).
-\newblock Precise computation of limit spectra of sample covariance matrices.
+\newblock Efficient computation of limit spectra of sample covariance matrices.
+\newblock {\em arXiv preprint arXiv:1507.01649}.
 
 \bibitem[Marchenko and Pastur, 1967]{marchenko1967distribution}
 Marchenko, V.~A. and Pastur, L.~A. (1967).

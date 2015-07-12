@@ -5,7 +5,7 @@
 \contentsline {subsection}{\numberline {3.1}Background}{2}{subsection.3.1}
 \contentsline {subsection}{\numberline {3.2}Quick example}{2}{subsection.3.2}
 \contentsline {subsection}{\numberline {3.3}Longer example}{3}{subsection.3.3}
-\contentsline {subsection}{\numberline {3.4}More examples: Reproducing the results of \cite {dobriban2015precise}}{5}{subsection.3.4}
+\contentsline {subsection}{\numberline {3.4}More examples: Reproducing the results of \cite {dobriban2015efficient}}{5}{subsection.3.4}
 \contentsline {section}{\numberline {4}Computational methods}{6}{section.4}
 \contentsline {subsection}{\numberline {4.1}Atomic: computing the limit spectrum}{6}{subsection.4.1}
 \contentsline {subsection}{\numberline {4.2}Calling the solvers directly}{7}{subsection.4.2}

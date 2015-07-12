@@ -83,7 +83,7 @@
 \tableofcontents
 \section{Introduction}
 
-The \textsc{EigenEdge} MATLAB package contains open source implementations of the author's methods for working with eigenvalue distributions of large random matrices of the covariance type. In particular, it contains the \textsc{Spectrode} method to compute the limit empirical spectrum of sample covariance matrices \citep[proposed in][]{dobriban2015precise}. 
+The \textsc{EigenEdge} MATLAB package contains open source implementations of the author's methods for working with eigenvalue distributions of large random matrices of the covariance type. In particular, it contains the \textsc{Spectrode} method to compute the limit empirical spectrum of sample covariance matrices \citep[proposed in][]{dobriban2015efficient}. 
 
 \begin{itemize}
 \item{Version: } 0.0.1
@@ -92,7 +92,7 @@ The \textsc{EigenEdge} MATLAB package contains open source implementations of th
 \item{License: } \verb+GPL-3+
 \end{itemize}
 
-In addition, this package contains the code to reproduce all simulation results from the paper \cite{dobriban2015precise}. These are contained in the \verb+\Experiments\Spectrode+ folder.
+In addition, this package contains the code to reproduce all simulation results from the paper \cite{dobriban2015efficient}. These are contained in the \verb+\Experiments\Spectrode+ folder.
 
 \section{Installation}
 
@@ -109,7 +109,7 @@ An example computation is in the \verb+\Experiments\Examples\example.m+ file. Th
 \section{Example}
 \label{example}
 
-Here we give a simple example of using the \textsc{Spectrode} function for computing limit spectra of sample covariance matrices. We refer to the paper \cite{dobriban2015precise} for a full description of the method. The code for reproducing this example is available in the \verb+\Experiments\Examples\example.m+ file in our package. 
+Here we give a simple example of using the \textsc{Spectrode} function for computing limit spectra of sample covariance matrices. We refer to the paper \cite{dobriban2015efficient} for a full description of the method. The code for reproducing this example is available in the \verb+\Experiments\Examples\example.m+ file in our package. 
 
 \subsection{Background}
 
@@ -155,7 +155,7 @@ In this case the limit spectrum $F$ has two components that barely separate. Usi
 
 \subsection{Longer example}
 
-In this example, we compute the limit sample spectrum of a more complicated population spectrum, which is a mixture of point masses and a continuous uniform distribution. This example was also presented in our paper \cite{dobriban2015precise} as an illustration of the power of our method \textsc{Atomic}. We are not aware of any other algorithm that can compute this quantity with the same speed and accuracy.
+In this example, we compute the limit sample spectrum of a more complicated population spectrum, which is a mixture of point masses and a continuous uniform distribution. This example was also presented in our paper \cite{dobriban2015efficient} as an illustration of the power of our method \textsc{Atomic}. We are not aware of any other algorithm that can compute this quantity with the same speed and accuracy.
 
 Specifically, we set $H$ a mixture
 
@@ -250,9 +250,9 @@ set(h,'FontSize',14);
 
 This finishes the advanced example use of the \verb+Spectrode+ function. 
 
-\subsection{More examples: Reproducing the results of \cite{dobriban2015precise}}
+\subsection{More examples: Reproducing the results of \cite{dobriban2015efficient}}
 
-Several more reproducible examples are provided with the software package. These include the computational results presented in the paper \cite{dobriban2015precise}, which are found in the folder \verb+\Experiments\Spectrode+. 
+Several more reproducible examples are provided with the software package. These include the computational results presented in the paper \cite{dobriban2015efficient}, which are found in the folder \verb+\Experiments\Spectrode+. 
 
 The examples include (and their locations are the following folders):
 
@@ -320,7 +320,7 @@ Here $\delta_t$ is the point mass at $t$ and $U(a,b)$ is the uniform distributio
 \item \verb+w_int+:   weights of the continuous part of the spectrum. This must be a non-negative vector. The entry \verb+w_int[t]+ specifies the weights of the $i$-th continuous component of the spectrum, a uniform distribution on $[a_t,b_t]$. If this is empty, then the defualt value is a uniform distribution subject to the constraint \verb+sum(w)+sum(w\_int) =1+.
 \item \verb+epsilon+: accuracy parameter. As the accuracy parameter $\varepsilon \to 0$, the density approximation becomes more accurate. However, only the convergence of the procedure is guaranteed, not the actual accuracy. 
 \item \verb+M+:  number of grid points in each interval of the support. This is an additional parameter which allows the user to specify how many grid points should be used in each interval in the support of the sample spectrum. This is available for additonal flexibility. 
-\item \verb+alg+: The algorithm used to compute the density. The available choices are \verb+ {'spectrode','fp','newton'};+. These stand for: \verb+'spectrode'+ is the \textsc{Spectrode} algorithm proposed in \cite{dobriban2015precise}, \verb+ 'fp'+ is the fixed point method described in \cite{couillet2011deterministic}, and \verb+ 'newton'+ is Newton's method, which the author learned from Jack W. Silverstein, and which is described in \cite{dobriban2015precise}. Please see that paper for more information on each method. 
+\item \verb+alg+: The algorithm used to compute the density. The available choices are \verb+ {'spectrode','fp','newton'};+. These stand for: \verb+'spectrode'+ is the \textsc{Spectrode} algorithm proposed in \cite{dobriban2015efficient}, \verb+ 'fp'+ is the fixed point method described in \cite{couillet2011deterministic}, and \verb+ 'newton'+ is Newton's method, which the author learned from Jack W. Silverstein, and which is described in \cite{dobriban2015efficient}. Please see that paper for more information on each method. 
 \end{itemize}
 
 The outputs \verb+[grid, density,m, v, mass_at_0, K_hat, l_hat, u_hat, x, f_hat]+ are: 
@@ -506,7 +506,7 @@ We provide some utilities for generating simulations  when working with spectral
 
 \subsubsection{Comb model for eigenvalues}
 
-The comb model for eigenvalues was used in \cite{dobriban2015precise} as an example for identifying the support edges. In this model the eigenvalues and the weights are each defined in terms of arithmetic progressions
+The comb model for eigenvalues was used in \cite{dobriban2015efficient} as an example for identifying the support edges. In this model the eigenvalues and the weights are each defined in terms of arithmetic progressions
 
 \begin{equation*}
 \label{Comb_model}
