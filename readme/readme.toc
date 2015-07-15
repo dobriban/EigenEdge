@@ -7,7 +7,7 @@
 \contentsline {subsection}{\numberline {3.3}Longer example}{3}{subsection.3.3}
 \contentsline {subsection}{\numberline {3.4}More examples: Reproducing the results of \cite {dobriban2015efficient}}{5}{subsection.3.4}
 \contentsline {section}{\numberline {4}Computational methods}{6}{section.4}
-\contentsline {subsection}{\numberline {4.1}Atomic: computing the limit spectrum}{6}{subsection.4.1}
+\contentsline {subsection}{\numberline {4.1}Spectrode: computing the limit spectrum}{6}{subsection.4.1}
 \contentsline {subsection}{\numberline {4.2}Calling the solvers directly}{7}{subsection.4.2}
 \contentsline {subsubsection}{\numberline {4.2.1}\sc {Spectrode}}{8}{subsubsection.4.2.1}
 \contentsline {subsubsection}{\numberline {4.2.2}Fixed point method}{8}{subsubsection.4.2.2}

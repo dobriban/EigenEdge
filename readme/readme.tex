@@ -151,11 +151,11 @@ The results are shown below:
 \label{scatter_prior_current}
 \end{figure}
 
-In this case the limit spectrum $F$ has two components that barely separate. Using \textsc{Atomic}, we could perform experiments by changing the input parameters \verb+t,gamma+, to examine precisley when the two clusters separate. This is, however, beyond the scope of the current example.
+In this case the limit spectrum $F$ has two components that barely separate. Using \textsc{Spectrode}, we could perform experiments by changing the input parameters \verb+t,gamma+, to examine precisley when the two clusters separate. This is, however, beyond the scope of the current example.
 
 \subsection{Longer example}
 
-In this example, we compute the limit sample spectrum of a more complicated population spectrum, which is a mixture of point masses and a continuous uniform distribution. This example was also presented in our paper \cite{dobriban2015efficient} as an illustration of the power of our method \textsc{Atomic}. We are not aware of any other algorithm that can compute this quantity with the same speed and accuracy.
+In this example, we compute the limit sample spectrum of a more complicated population spectrum, which is a mixture of point masses and a continuous uniform distribution. This example was also presented in our paper \cite{dobriban2015efficient} as an illustration of the power of our method \textsc{Spectrode}. We are not aware of any other algorithm that can compute this quantity with the same speed and accuracy.
 
 Specifically, we set $H$ a mixture
 
@@ -216,7 +216,7 @@ Next, we set \verb+\gamma = 0.01+. Finally, we set the accuracy parameter \verb+
 
 In this example \verb+K_hat = 11+, so the clusters are apparently disjoint. 
 
-Finally, we should generate a large random matrix to verify, at least qualitatively, that the results are correct. While this is quite simple to do, we provide some helper functions to make it even easier. We provide a function to take random draws from distributions $H$ that are mixtures of point masses and uniforms, of the form \ref{uniform_atomic}. This function \verb+random_draw_disc_unif()+ takes as parameters the same representation $t,w,r,w_{int}$ that was used to call \textsc{Atomic}. However, it also takes a parameter \verb+p+ to specify the number of draws from the distribution. We choose first \verb+n+, the number of samples, and then \verb+p+ is determined using $\gamma = p/n$. The code to generate a random draw from $H$ is
+Finally, we should generate a large random matrix to verify, at least qualitatively, that the results are correct. While this is quite simple to do, we provide some helper functions to make it even easier. We provide a function to take random draws from distributions $H$ that are mixtures of point masses and uniforms, of the form \ref{uniform_atomic}. This function \verb+random_draw_disc_unif()+ takes as parameters the same representation $t,w,r,w_{int}$ that was used to call \textsc{Spectrode}. However, it also takes a parameter \verb+p+ to specify the number of draws from the distribution. We choose first \verb+n+, the number of samples, and then \verb+p+ is determined using $\gamma = p/n$. The code to generate a random draw from $H$ is
 
 \begin{verbatim}
 rng(0);
@@ -268,7 +268,7 @@ The examples include (and their locations are the following folders):
 \section{Computational methods}
 \label{methods}
 
-\subsection{Atomic: computing the limit spectrum}
+\subsection{Spectrode: computing the limit spectrum}
 \label{atomic_description}
 
 The \textsc{Spectrode} method computes the limit sample spectrum of covariance matrices from the limit population spectrum. The  main user interface for this computation is \verb+spectrode()+. This function takes as input the population spectral distribution $H$, aspect ratio $\gamma$, and other parameters, and computes the density of the limit spectrum on a grid. 
@@ -346,7 +346,7 @@ Special outputs that are produced only if the method \verb+'alg'+ is \textsc{Spe
 
 \subsection{Calling the solvers directly}
 
-In addition to the main wrapper \textsc{Atomic}, we also provide direct access to the solvers for computing the limit spectrum. Thse have a standardized syntax similar to the main wrapper, but they can offer more flexibility. Further, each function has a base implementation for working only with mixtures of point masses, and a more sophisticated version that also handles mixtures of uniform distributions.
+In addition to the main wrapper \textsc{Spectrode}, we also provide direct access to the solvers for computing the limit spectrum. Thse have a standardized syntax similar to the main wrapper, but they can offer more flexibility. Further, each function has a base implementation for working only with mixtures of point masses, and a more sophisticated version that also handles mixtures of uniform distributions.
 
 \subsubsection{\sc{Spectrode}}
 

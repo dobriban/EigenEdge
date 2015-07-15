@@ -6,7 +6,7 @@
 \BOOKMARK [2][-]{subsection.3.3}{Longer example}{section.3}% 6
 \BOOKMARK [2][-]{subsection.3.4}{More examples: Reproducing the results of dobriban2015efficient}{section.3}% 7
 \BOOKMARK [1][-]{section.4}{Computational methods}{}% 8
-\BOOKMARK [2][-]{subsection.4.1}{Atomic: computing the limit spectrum}{section.4}% 9
+\BOOKMARK [2][-]{subsection.4.1}{Spectrode: computing the limit spectrum}{section.4}% 9
 \BOOKMARK [2][-]{subsection.4.2}{Calling the solvers directly}{section.4}% 10
 \BOOKMARK [3][-]{subsubsection.4.2.1}{Spectrode}{subsection.4.2}% 11
 \BOOKMARK [3][-]{subsubsection.4.2.2}{Fixed point method}{subsection.4.2}% 12

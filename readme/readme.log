@@ -1,7 +1,7 @@
-This is pdfTeX, Version 3.1415926-2.4-1.40.13 (MiKTeX 2.9 64-bit) (preloaded format=pdflatex 2014.7.5)  12 JUL 2015 10:26
+This is pdfTeX, Version 3.1415926-2.4-1.40.13 (MiKTeX 2.9 64-bit) (preloaded format=pdflatex 2014.6.16)  15 JUL 2015 12:44
 entering extended mode
-**C:/Code/EigenEdge/Readme/readme.tex
-(C:/Code/EigenEdge/Readme/readme.tex
+**readme.tex
+(C:\Code\EigenEdge\readme\readme.tex
 LaTeX2e <2011/06/27>
 Babel <v3.8m> and hyphenation patterns for english, afrikaans, ancientgreek, ar
 abic, armenian, assamese, basque, bengali, bokmal, bulgarian, catalan, coptic, 
@@ -664,7 +664,7 @@ Document Style - pseudocode environments for use with the `algorithmicx' style
 ("C:\Program Files\MiKTeX 2.9\tex\latex\chngcntr\chngcntr.sty"
 Package: chngcntr 2009/09/02 v1.0a change counter resetting
 )
-(C:\Code\EigenEdge\Readme\readme.aux
+(C:\Code\EigenEdge\readme\readme.aux
 
 LaTeX Warning: Label `Comb_model' multiply defined.
 
@@ -749,7 +749,7 @@ LaTeX Info: Redefining \ref on input line 81.
 LaTeX Info: Redefining \pageref on input line 81.
 LaTeX Info: Redefining \nameref on input line 81.
 
-(C:\Code\EigenEdge\Readme\readme.out) (C:\Code\EigenEdge\Readme\readme.out)
+(C:\Code\EigenEdge\readme\readme.out) (C:\Code\EigenEdge\readme\readme.out)
 \@outlinefile=\write3
 Package caption Info: Begin \AtBeginDocument code.
 Package caption Info: float package is loaded.
@@ -765,7 +765,7 @@ LaTeX Font Info:    Try loading font information for U+msb on input line 83.
 ("C:\Program Files\MiKTeX 2.9\tex\latex\amsfonts\umsb.fd"
 File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 )
-(C:\Code\EigenEdge\Readme\readme.toc)
+(C:\Code\EigenEdge\readme\readme.toc)
 \tf@toc=\write4
 LaTeX Font Info:    Try loading font information for OMS+cmr on input line 89.
 
@@ -870,19 +870,25 @@ Package pdftex.def Info: "../Experiments/Fractals/Newton Method/high_resolution
 _MP_null".png used on input line 579.
 (pdftex.def)             Requested size: 205.56747pt x 154.1756pt.
 
-(C:\Code\EigenEdge\Readme\readme.bbl [12 <C:/Code/EigenEdge/Experiments/Fractal
+(C:\Code\EigenEdge\readme\readme.bbl [12 <C:/Code/EigenEdge/Experiments/Fractal
 s/Fixed Point Method/MP_Iter_Julia_Set.png> <C:/Code/EigenEdge/Experiments/Frac
 tals/Newton Method/high_resolution_MP_null.png>])
 Package atveryend Info: Empty hook `BeforeClearDocument' on input line 587.
  [13]
 Package atveryend Info: Empty hook `AfterLastShipout' on input line 587.
 
-(C:\Code\EigenEdge\Readme\readme.aux)
+(C:\Code\EigenEdge\readme\readme.aux)
 Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 587.
 Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 587.
-Package rerunfilecheck Info: File `readme.out' has not changed.
-(rerunfilecheck)             Checksum: A4C0D159B0D07C7CC9915777F99CA50F;1320.
 
+
+Package rerunfilecheck Warning: File `readme.out' has changed.
+(rerunfilecheck)                Rerun to get outlines right
+(rerunfilecheck)                or use package `bookmark'.
+
+Package rerunfilecheck Info: Checksums for `readme.out':
+(rerunfilecheck)             Before: A4C0D159B0D07C7CC9915777F99CA50F;1320
+(rerunfilecheck)             After:  39174940249F4709D3853FBB11C33A08;1323.
 
 LaTeX Warning: There were multiply-defined labels.
 
@@ -890,12 +896,12 @@ Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 587.
  ) 
 Here is how much of TeX's memory you used:
  9368 strings out of 493921
- 136264 string characters out of 3147283
+ 136264 string characters out of 3147282
  235607 words of memory out of 3000000
  12443 multiletter control sequences out of 15000+200000
  15446 words of font info for 59 fonts, out of 3000000 for 9000
  841 hyphenation exceptions out of 8191
- 36i,13n,43p,802b,454s stack positions out of 5000i,500n,10000p,200000b,50000s
+ 36i,13n,43p,780b,454s stack positions out of 5000i,500n,10000p,200000b,50000s
 <C:/Program Files/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmbx10.pfb><C:/Pr
 ogram Files/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmbx12.pfb><C:/Program Fi
 les/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmcsc10.pfb><C:/Program Files/MiK
@@ -914,7 +920,7 @@ msfonts/cm/cmti10.pfb><C:/Program Files/MiKTeX 2.9/fonts/type1/public/amsfonts/
 cm/cmtt10.pfb><C:/Program Files/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmtt9
 .pfb><C:/Program Files/MiKTeX 2.9/fonts/type1/public/amsfonts/symbols/msbm10.pf
 b>
-Output written on readme.pdf (13 pages, 1425240 bytes).
+Output written on readme.pdf (13 pages, 1424483 bytes).
 PDF statistics:
  298 PDF objects out of 1000 (max. 8388607)
  47 named destinations out of 1000 (max. 500000)
