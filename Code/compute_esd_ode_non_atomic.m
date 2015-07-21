@@ -152,6 +152,7 @@ num_clus = num_clus + 1;
 l_endpoints(num_clus)  = minf;
 u_endpoints(num_clus)  = Inf;
 c = M-ind_min+1;
+c = c(1);
 num_grid_points(num_clus) = c; %num grid points where increasing
 f_grid(num_clus,1:c) = f(ind_min:M);
 if ~issorted(f_grid(num_clus,1:c))
@@ -283,7 +284,7 @@ end
 
 %retain the relevant part of the grid
 maxi = max(max(t),max(r(:,2)));
-good_ind = (grid>0)&(grid<(1+sqrt(gamma))^2*maxi);
+good_ind = (grid>0)&(grid<(1+sqrt(gamma))^2*maxi*1.1);
 grid = grid(good_ind);
 v = v(good_ind);
 
