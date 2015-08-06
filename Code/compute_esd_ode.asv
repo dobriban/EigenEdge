@@ -1,5 +1,5 @@
 function [grid, density, m, v, mass_at_0, K_hat, l_hat, u_hat, x, f_hat] = ...
-    compute_esd_ode(t, w, gamma,epsilon,edge_finding,M)
+    compute_esd_ode(t, w, gamma,epsilon,M)
 %Compute limit spectrum of covariance matrices with ODE method
 %uses the inverse of the Stieltjes transform obtained by Silverstein&Choi
 %(95) to determine the edges of the spectrum
@@ -123,33 +123,25 @@ for i = 1:num_unique-1
         case 'brent'
             z_double_prime_equiv = @(v) sum( w.*(t.*v).^3./(t.*v+1).^3)-1/gamma;
             z_prime_equiv = @(v) sum( w.*(t.*v).^2./(t.*v+1).^2)-1/gamma;
-            z_prime = @(v) 1./v.^2-gamma*sum( w.*t.^2./(t.*v+1).^2);
+            z_prime = @(v) 1./v^2-gamma*sum( w.*t.^2./(t.*v+1).^2);
             inv_ST = @(v) - 1./v + gamma* sum(w.*t./(1 + t.*v));
             
             x0 = [L+delta U-delta]; % initial interval
-            x = fzero(z_double_prime_equiv,x0); 
-            %ezplot(z_double_prime_equiv,x0); 
-            %ezplot(z_prime_equiv,x0); 
-            if (z_prime_equiv(x)<0)  
+            x = fzero(z_double_prime_equiv,x0);
+            
+            if (z_prime_equiv(x)<0)
                 num_clus = num_clus + 1;
                 x0 = [L+delta x]; %to the left of the point where z''=0
                 left_zero = fzero(z_prime_equiv,x0);
-                %ezplot(z_prime_equiv,x0); 
-                l_endpoints(num_clus) = inv_ST(left_zero);
+                l_endpoints(num_clus) = z_prime(left_zero);
                 x0 = [x U-delta]; %to the right of the point where z''=0
                 right_zero = fzero(z_prime_equiv,x0);
-                %ezplot(z_prime_equiv,x0); 
-                u_endpoints(num_clus) = inv_ST(right_zero);
+                u_endpoints(num_clus) = z_prime(right_zero);
                 local_grid = (l_endpoints(num_clus):delta:u_endpoints(num_clus))';
                 num_grid_points(num_clus) = length(local_grid); %num grid points where increasing
-                c = length(local_grid); 
-                for i=1:c
-                    f_grid(num_clus,i) = inv_ST(local_grid(i)); %in the inverse v-space (or z-space)
-                end
+                c = length(local_grid);
+                f_grid(num_clus,1:c) = inv_ST(local_grid); %in the inverse v-space (or z-space)
                 m_grid(num_clus,1:c) = local_grid; %in the v-space
-                if ~issorted(f_grid(num_clus,1:c))
-                    fprintf('Unsorted f grid between clusters.\n');
-                end
             end
     end
 end
@@ -171,6 +163,7 @@ if ~issorted(f_grid(num_clus,1:c))
     fprintf('Unsorted f grid in interval between -1/t & 0.\n');
 end
 m_grid(num_clus,1:c) = v(ind_min:M);
+%plot(m,f)
 
 
 %the positive line: between 0 and inf
@@ -294,4 +287,6 @@ v = v(good_ind);
 %compute the usual ST from the dual ST
 m = 1/gamma*v- (1-1/gamma)./grid;
 density = abs(1/pi*imag(m));
-
+ind = density<100;
+grid=grid(ind);
+density=density(ind);

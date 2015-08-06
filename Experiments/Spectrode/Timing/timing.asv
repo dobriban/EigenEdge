@@ -108,10 +108,12 @@ t = [1,8];
 w = [1,1]/2;
 
 tau = 8;
-rng(0)
 num_methods=3;
 times = zeros(length(epsi_array),num_methods);
 errors = zeros(length(epsi_array),num_methods);
+gamma_plus = (1+sqrt(gamma))^2;
+gamma_minus = (1-sqrt(gamma))^2;
+MP_density = @(x) 1/(2*pi*gamma)* sqrt(max((gamma_plus-x).*(x-gamma_minus),0))./x;
 
 for i=1:length(epsi_array);
     epsilon = 10.^(-epsi_array(i));
@@ -132,21 +134,17 @@ for i=1:length(epsi_array);
     %Spectrode - with Brent edge finding
     tic
     edge_finding = 'brent';
-    [grid_brent,density_ode_brent] =  compute_esd_ode(t,w,gamma,epsilon,edge_finding);
+    [grid,density_ode_brent] =  compute_esd_ode(t,w,gamma,epsilon,edge_finding);
     times(i,3) = toc;
     fprintf('Test %d/%d: For accuracy %2.2e, Spectrode Brent method took %2.2f seconds\n',i,length(epsi_array), epsilon, times(i,3));
     
     
     %store errors
-    [m_theor] = SparseStieltjes2(grid,gamma,1/2,tau);
-    theor_density = 1/pi*imag(m_theor);
-    [m_theor_brent] = SparseStieltjes2(grid_brent,gamma,1/2,tau);
-    theor_density_brent = 1/pi*imag(m_theor_brent);
+    theor_density = MP_density(grid);
     errors(i,1)= mean(abs(density_ode_grid-theor_density));
     errors(i,2)= mean(abs(density_fp-theor_density));
-    errors(i,3)= mean(abs(density_ode_brent-theor_density_brent));
+    errors(i,3)= mean(abs(density_ode_brent-theor_density));
 end
-
 
 %%
 %save('timing_experiment_results_two-point.mat');

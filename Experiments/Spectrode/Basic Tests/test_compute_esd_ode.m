@@ -8,8 +8,8 @@ K = 6;
 [t,w]  = geometric_model(a,b,K);
 gamma = 0.5;
 epsi  = 1e-6;
-[grid,density] =  compute_esd_ode(t,w,gamma,epsi);
-
+[grid,density,~,~,~,K_hat] =  compute_esd_ode(t,w,gamma,epsi);
+%
 plot(grid, density/max(density),'r','LineWidth',4)
 %% empirical eigenvalues
 p = 100;
