@@ -1,13 +1,13 @@
-%Test support identification in geometric model
+%Test support identification in comb model
 
-%% set parameters of arithmetic model
+%% set parameters of comb model
 gap = 0.01;
 t_min = 1/2;
 t_max = 10;
 K = 6;
-[t,w]  = arithmetic_model(K, t_min,t_max,gap);
+[t,w]  = comb_model(K, t_min,t_max,gap);
 
-%% test Atomic method
+%% test Spectrode
 epsi_array = 10.^(-(1:6))';
 gamma_array = 2.^(linspace(-5,-2,4))';
 K_err = zeros(length(epsi_array),length(gamma_array));
@@ -19,7 +19,7 @@ for i=1:length(epsi_array)
   epsi = epsi_array(i);
   for j=1:length(gamma_array)
     gamma = gamma_array(j);
-    [grid, density, m, v, mass_at_0, K_hat, l_hat, u_hat, x, f_hat] =  compute_esd_ode(t, w, gamma,epsi);
+    [grid, density, m, v, mass_at_0, K_hat, l_hat, u_hat, x, f_hat] =  compute_esd_ode(t, w, gamma,epsi,'brent');
     tic
     %get gold standard: K, support boundary
     epsi_iter  = 1e-7;

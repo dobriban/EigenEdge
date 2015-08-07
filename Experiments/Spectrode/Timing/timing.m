@@ -34,16 +34,17 @@ for i=1:length(epsi_array);
     %Spectrode - with Brent edge finding
     tic
     edge_finding = 'brent';
-    [grid,density_ode_brent] =  compute_esd_ode(t,w,gamma,epsilon,edge_finding);
+    [grid_brent,density_ode_brent] =  compute_esd_ode(t,w,gamma,epsilon,edge_finding);
     times(i,3) = toc;
     fprintf('Test %d/%d: For accuracy %2.2e, Spectrode Brent method took %2.2f seconds\n',i,length(epsi_array), epsilon, times(i,3));
     
     
     %store errors
     theor_density = MP_density(grid);
+    theor_density_brent =  MP_density(grid_brent);
     errors(i,1)= mean(abs(density_ode_grid-theor_density));
     errors(i,2)= mean(abs(density_fp-theor_density));
-    errors(i,3)= mean(abs(density_ode_brent-theor_density));
+    errors(i,3)= mean(abs(density_ode_brent-theor_density_brent));
 end
 
 %to save time when editing the figure associated with these results, I have

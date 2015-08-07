@@ -1,4 +1,4 @@
-function [grid, density, m, v, mass_at_0, K_hat, l_hat, u_hat, x, f_hat] = ...
+function [grid, density, m, v, mass_at_0, K_hat, l_hat, u_hat, v_x, f_hat] = ...
     compute_esd_ode(t, w, gamma,epsilon,edge_finding,M)
 %Compute limit spectrum of covariance matrices with ODE method
 %uses the inverse of the Stieltjes transform obtained by Silverstein&Choi
@@ -45,9 +45,10 @@ end
 
 if ~exist('edge_finding','var')
     edge_finding = 'grid';
-    edge_finding = 'brent';
+    %edge_finding = 'brent';
 end
 
+options = optimset('TolX',10^(-20));
 %compute mass of sample distribution at zero
 p0 = sum(w.*(t==0));
 mass_at_0 = max(0, 1-gamma^(-1)*(1-p0));
@@ -55,166 +56,179 @@ mass_at_0 = max(0, 1-gamma^(-1)*(1-p0));
 T = unique(t(t>0));
 B = sort(-1./T);
 num_unique = length(B);
-l_endpoints = zeros(num_unique+2,1);
-u_endpoints = zeros(num_unique+2,1);
+z_l_endpoints = zeros(num_unique+2,1);
+z_u_endpoints = zeros(num_unique+2,1);
+z_double_prime_equiv = @(v) sum( w.*(t.*v).^3./(t.*v+1).^3)-1/gamma;
+z_prime_equiv = @(v) sum( w.*(t.*v).^2./(t.*v+1).^2)-1/gamma;
+z = @(v) - 1./v + gamma* sum(w.*t./(1 + t.*v));
 
 %% outside the support
-f_grid = zeros(num_unique+2,M); %grids in f-space
-m_grid = zeros(num_unique+2,M); %grids in m-space
+z_grid = zeros(num_unique+2,M); %grids in z-space
+v_grid = zeros(num_unique+2,M); %grids in v-space
 num_grid_points = zeros(num_unique+2,1); %number of points in each grid segment
 
 %go interval by interval;
 num_clus = 1;
-l_endpoints(1) = 0;
+z_l_endpoints(1) = 0;
 if (gamma <1) %if need to look at lower half
-    L = min(B) -1;
-    v= linspace(L+epsilon, min(B)-epsilon, M);
-    [grid,~,~,maxf,ind_max] = evaluate_inverse_ST(t,w,gamma, v);
-    
-    while (ind_max==find((grid<Inf)==1, 1 ))  %need to deal with Inf's
-        L = 10*(L - min(B)) + min(B);
-        v= linspace(L+epsilon, min(B)-epsilon, M);
-        [grid,~,~,maxf,ind_max] = evaluate_inverse_ST(t,w,gamma, v);
+    v_L = min(B) -1;
+    switch edge_finding
+        case 'grid'
+            v= linspace(v_L+epsilon, min(B)-epsilon, M);
+            [grid,~,~,maxz,ind_max] = evaluate_inverse_ST(t,w,gamma, v);
+            
+            while (ind_max==find((grid<Inf)==1, 1 ))  %need to deal with Inf's
+                v_L = 10*(v_L - min(B)) + min(B);
+                v= linspace(v_L+epsilon, min(B)-epsilon, M);
+                [grid,~,~,maxz,ind_max] = evaluate_inverse_ST(t,w,gamma, v);
+            end
+            z_u_endpoints(num_clus) = maxz;
+            num_grid_points(num_clus) = ind_max; %number of grid points in first interval
+            z_grid(num_clus,1:ind_max) = grid(1:ind_max);
+            v_grid(num_clus,1:ind_max) = v(1:ind_max);
+        case 'brent'
+            v_0 = [v_L+epsilon, min(B)-epsilon]; % initial interval
+            while (z_prime_equiv(v_0(1))*z_prime_equiv(v_0(2))>0)
+                v_L = 10*(v_L - min(B)) + min(B);
+                v_0 = [v_L+epsilon, min(B)-epsilon]; % initial interval
+            end
+            v_x = fzero(z_prime_equiv,v_0,options);
+            z_u_endpoints(num_clus) = z(v_x);
+            v_delta = (z_u_endpoints(num_clus)-z_l_endpoints(num_clus))/(M+2);
+            v_local = (z_l_endpoints(num_clus)+epsilon:v_delta:z_u_endpoints(num_clus))';
+            [num_grid_points(num_clus), z_grid(num_clus,1:length(v_local)), v_grid(num_clus,1:length(v_local))] = grid_output(v_local,z);
     end
-    %plot(m,f) % should see a function with a unique maximum <0
-    u_endpoints(num_clus) = maxf;
-    num_grid_points(num_clus) = ind_max; %number of grid points in first interval
-    f_grid(num_clus,1:ind_max) = grid(1:ind_max);
-    if ~issorted(f_grid(num_clus,1:ind_max))
-        fprintf('Unsorted f grid in lower half.\n');
-    end
-    m_grid(num_clus,1:ind_max) = v(1:ind_max);
 else
-    %number of grid points in first interval = 0; worry not about setting
-    %f_grid, m_grid
     num_grid_points(num_clus) = 0;
-    %but what is u_endpoints(1)?
-    %u_endpoints(1) = ? should be 0 i guess
 end
 
 %each interval between point masses -1/t
 for i = 1:num_unique-1
-    L = B(i); %lower endpoint -1/t
-    U = B(i+1); %upper endpoint -1/t
-    delta = (U-L)/(M+2);
+    v_L = B(i); %lower endpoint -1/t
+    v_U = B(i+1); %upper endpoint -1/t
+    v_delta = (v_U-v_L)/(M+2);
     %Find the edges of the spectrum
     switch edge_finding
-        %can use the old grid-wise method
         case 'grid'
-            v= linspace(L+delta, U-delta, M); %adaptive grid-forming
+            v= linspace(v_L+v_delta, v_U-v_delta, M); %adaptive grid-forming
             [grid, ~, ~,~,~,decreasing,local_min,local_max, local_min_ind, local_max_ind] ...
                 =  evaluate_inverse_ST(t,w,gamma, v);
-            %plot(m,f)
             if (decreasing==0)
                 num_clus = num_clus + 1;
-                l_endpoints(num_clus) = local_min;
-                u_endpoints(num_clus) = local_max;
+                z_l_endpoints(num_clus) = local_min;
+                z_u_endpoints(num_clus) = local_max;
                 num_grid_points(num_clus) = local_max_ind - local_min_ind + 1; %num grid points where increasing
                 c = num_grid_points(num_clus);
-                f_grid(num_clus,1:c) = grid(local_min_ind:local_max_ind);
-                if ~issorted(f_grid(num_clus,1:c))
-                    fprintf('Unsorted f grid between clusters.\n');
-                end
-                m_grid(num_clus,1:c) = v(local_min_ind:local_max_ind);
+                z_grid(num_clus,1:c) = grid(local_min_ind:local_max_ind);
+                v_grid(num_clus,1:c) = v(local_min_ind:local_max_ind);
             end
-            
-            %use the new method that is based on numerical calculations with
-            %the z' and z'' functions
         case 'brent'
-            z_double_prime_equiv = @(v) sum( w.*(t.*v).^3./(t.*v+1).^3)-1/gamma;
-            z_prime_equiv = @(v) sum( w.*(t.*v).^2./(t.*v+1).^2)-1/gamma;
-            z_prime = @(v) 1./v.^2-gamma*sum( w.*t.^2./(t.*v+1).^2);
-            inv_ST = @(v) - 1./v + gamma* sum(w.*t./(1 + t.*v));
-            
-            x0 = [L+delta U-delta]; % initial interval
-            x = fzero(z_double_prime_equiv,x0); 
-            %ezplot(z_double_prime_equiv,x0); 
-            %ezplot(z_prime_equiv,x0); 
-            if (z_prime_equiv(x)<0)  
+            v_0 = [v_L+v_delta, v_U-v_delta]; % initial interval
+            while (z_double_prime_equiv(v_0(1))*z_double_prime_equiv(v_0(2))>0)
+                v_delta = v_delta/2;
+                v_0 = [v_L+v_delta, v_U-v_delta];
+            end
+            v_x = fzero(z_double_prime_equiv,v_0,options);
+            if (z_prime_equiv(v_x)<0)
                 num_clus = num_clus + 1;
-                x0 = [L+delta x]; %to the left of the point where z''=0
-                left_zero = fzero(z_prime_equiv,x0);
-                %ezplot(z_prime_equiv,x0); 
-                l_endpoints(num_clus) = inv_ST(left_zero);
-                x0 = [x U-delta]; %to the right of the point where z''=0
-                right_zero = fzero(z_prime_equiv,x0);
-                %ezplot(z_prime_equiv,x0); 
-                u_endpoints(num_clus) = inv_ST(right_zero);
-                local_grid = (l_endpoints(num_clus):delta:u_endpoints(num_clus))';
-                num_grid_points(num_clus) = length(local_grid); %num grid points where increasing
-                c = length(local_grid); 
-                for i=1:c
-                    f_grid(num_clus,i) = inv_ST(local_grid(i)); %in the inverse v-space (or z-space)
+                v_0 = [v_L+v_delta v_x]; %to the left of the point where z''=0
+                while (z_prime_equiv(v_0(1))*z_prime_equiv(v_0(2))>0)
+                    v_delta = v_delta/2;
+                    v_0 =  [v_L+v_delta v_x];
                 end
-                m_grid(num_clus,1:c) = local_grid; %in the v-space
-                if ~issorted(f_grid(num_clus,1:c))
-                    fprintf('Unsorted f grid between clusters.\n');
+                left_zero = fzero(z_prime_equiv,v_0,options);
+                z_l_endpoints(num_clus) = z(left_zero);
+                v_0 = [v_x v_U-v_delta]; %to the right of the point where z''=0
+                while (z_prime_equiv(v_0(1))*z_prime_equiv(v_0(2))>0)
+                    v_delta = v_delta/2;
+                    v_0 = [v_x v_U-v_delta];
                 end
+                right_zero = fzero(z_prime_equiv,v_0,options);
+                z_u_endpoints(num_clus) = z(right_zero);
+                v_local = (z_l_endpoints(num_clus):v_delta:z_u_endpoints(num_clus))';
+                [num_grid_points(num_clus), z_grid(num_clus,1:length(v_local)), v_grid(num_clus,1:length(v_local))] = grid_output(v_local,z);
             end
     end
 end
 
 %last interval between -1/t & 0
-L = B(num_unique);
-U = 0;
-delta = (U-L)/(M+2);
-v= linspace(L+delta, U-delta, M); %adaptive grid-forming
-[grid, minf,ind_min] = evaluate_inverse_ST(t,w,gamma, v);
-num_clus = num_clus + 1;
-l_endpoints(num_clus)  = minf;
-u_endpoints(num_clus)  = Inf;
-c = M-ind_min+1;
-% c = c(1);
-num_grid_points(num_clus) = c; %num grid points where increasing
-f_grid(num_clus,1:c) = grid(ind_min:M);
-if ~issorted(f_grid(num_clus,1:c))
-    fprintf('Unsorted f grid in interval between -1/t & 0.\n');
+v_L = B(num_unique);
+v_U = 0;
+v_delta = (v_U-v_L)/(M+2);
+switch edge_finding
+    case 'grid'
+        v= linspace(v_L+v_delta, v_U-v_delta, M); %adaptive grid-forming
+        [grid, minf,ind_min] = evaluate_inverse_ST(t,w,gamma, v);
+        num_clus = num_clus + 1;
+        z_l_endpoints(num_clus)  = minf;
+        z_u_endpoints(num_clus)  = Inf;
+        c = M-ind_min+1;
+        num_grid_points(num_clus) = c; %num grid points where increasing
+        z_grid(num_clus,1:c) = grid(ind_min:M);
+        v_grid(num_clus,1:c) = v(ind_min:M);
+        
+    case 'brent'
+        v_0 = [v_L+v_delta v_U-v_delta]; % initial interval in v
+        while (z_prime_equiv(v_0(1))*z_prime_equiv(v_0(2))>0)
+            v_L = 10*(v_L - min(B)) + min(B);
+            v_0 = [v_L+v_delta, min(B)-v_delta]; % initial interval
+        end
+        v_x = fzero(z_prime_equiv,v_0,options); %value of v where z'(v0)=0
+        num_clus = num_clus + 1;
+        z_l_endpoints(num_clus) = z(v_x); %z(v0)
+        z_u_endpoints(num_clus) = Inf;
+        v_local = (v_x:v_delta:v_U-v_delta)';
+        [num_grid_points(num_clus), z_grid(num_clus,1:length(v_local)), v_grid(num_clus,1:length(v_local))] = grid_output(v_local,z);
 end
-m_grid(num_clus,1:c) = v(ind_min:M);
-
 
 %the positive line: between 0 and inf
 num_clus = num_clus+1;
-l_endpoints(num_clus) = -Inf;
+z_l_endpoints(num_clus) = -Inf;
 if (gamma >1) %if upper half maximum may exceed 0
-    U = 1;
-    v= linspace(epsilon, U-epsilon, M);
-    [grid,~,~,maxf,ind_max] = evaluate_inverse_ST(t,w,gamma, v);
-    
-    while (ind_max==length(v))  %no need to deal with Inf's
-        U = 10*U;
-        v= linspace(epsilon, U-epsilon, M);
-        [grid,~,~,maxf,ind_max] = evaluate_inverse_ST(t,w,gamma, v);
+    v_U = 1;
+    switch edge_finding
+        case 'grid'
+            v= linspace(epsilon, v_U-epsilon, M);
+            [grid,~,~,maxz,ind_max] = evaluate_inverse_ST(t,w,gamma, v);
+            while (ind_max==length(v))  %no need to deal with Inf's
+                v_U = 10*v_U;
+                v= linspace(epsilon, v_U-epsilon, M);
+                [grid,~,~,maxz,ind_max] = evaluate_inverse_ST(t,w,gamma, v);
+            end
+            z_u_endpoints(num_clus) =  maxz;
+            num_grid_points(num_clus) = ind_max; %number of grid points in last interval
+            z_grid(num_clus,1:ind_max) = grid(1:ind_max);
+            v_grid(num_clus,1:ind_max) = v(1:ind_max);
+            
+        case 'brent'
+            v_0 = [epsilon, v_U-epsilon];
+            while (z_prime_equiv(v_0(1))*z_prime_equiv(v_0(2))>0)
+                v_U = 10*v_U;
+                v_0 = [epsilon, v_U-epsilon];
+            end
+            v_x = fzero(z_prime_equiv,v_0,options);
+            z_u_endpoints(num_clus) = z(v_x);
+            v_delta=(v_U-v_x)/M;
+            v_local = (v_x:v_delta:v_U-epsilon)';
+            [num_grid_points(num_clus), z_grid(num_clus,1:length(v_local)), v_grid(num_clus,1:length(v_local))] = grid_output(v_local,z);
     end
-    %plot(m,f) % should see a function with a unique maximum > 0
-    u_endpoints(num_clus) = maxf;
-    num_grid_points(num_clus) = ind_max; %number of grid points in last interval
-    f_grid(num_clus,1:ind_max) = grid(1:ind_max);
-    if ~issorted(f_grid(num_clus,1:ind_max))
-        fprintf('Unsorted f grid in interval 0 & Inf, gamma>1.\n');
-    end
-    m_grid(num_clus,1:ind_max) = v(1:ind_max);
 else %if gamma<1, this interval gives me the whole region m>0;
     %know that the function is strictly increasing in this case
-    U = M;
-    v= linspace(epsilon, U-epsilon, M);
+    v_U = M;
+    v= linspace(epsilon, v_U-epsilon, M);
     [grid,~,~,~,~] = evaluate_inverse_ST(t,w,gamma, v);
-    u_endpoints(num_clus) = 0;
+    z_u_endpoints(num_clus) = 0;
     num_grid_points(num_clus) =M; %number of grid points in last interval
-    f_grid(num_clus,1:M) = grid(1:M);
-    if ~issorted(f_grid(num_clus,1:M))
-        fprintf('Unsorted f grid in interval 0 & Inf, gamma <1.\n');
-    end
-    m_grid(num_clus,1:M) = v(1:M);
-    %plot(m,f) % should see a function with strictly increasing
+    z_grid(num_clus,1:M) = grid(1:M);
+    v_grid(num_clus,1:M) = v(1:M);
 end
 
 %finish up by retaining only the nonzero clusters
-l_endpoints = l_endpoints(1:num_clus);
-u_endpoints = u_endpoints(1:num_clus);
+z_l_endpoints = z_l_endpoints(1:num_clus);
+z_u_endpoints = z_u_endpoints(1:num_clus);
 num_grid_points =  num_grid_points(1:num_clus);
-f_grid = f_grid(1:num_clus,:);
-m_grid = m_grid(1:num_clus,:);
+z_grid = z_grid(1:num_clus,:);
+v_grid = v_grid(1:num_clus,:);
 
 %% inside the support
 %Now stitch together all intervals where Stieltjes transform is real, and
@@ -228,23 +242,23 @@ grid = zeros(grid_length,1);
 K_hat = num_clus-2;
 l_hat =zeros(K_hat,1);
 u_hat =zeros(K_hat,1);
-x = zeros(M,K_hat);
+v_x = zeros(M,K_hat);
 f_hat = zeros(M,K_hat);
 
-grid(1:num_grid_points(num_clus)) = f_grid(num_clus, 1:num_grid_points(num_clus));
-v(1:num_grid_points(num_clus)) = m_grid(num_clus, 1:num_grid_points(num_clus));
+grid(1:num_grid_points(num_clus)) = z_grid(num_clus, 1:num_grid_points(num_clus));
+v(1:num_grid_points(num_clus)) = v_grid(num_clus, 1:num_grid_points(num_clus));
 ind = num_grid_points(num_clus); %current index
 
 %if gamma>1 need to set the u-endpoint to higher than 0
 if (gamma>1)
-    u_endpoints(1) = max(grid(1:num_grid_points(num_clus)));
+    z_u_endpoints(1) = max(grid(1:num_grid_points(num_clus)));
 end
 
 %if gamma <1 need to add in the first interval
 if (gamma < 1)
     i = 1;
-    grid(ind + 1:ind+num_grid_points(i)) = f_grid(i, 1:num_grid_points(i));
-    v(ind + 1:ind+num_grid_points(i)) = m_grid(i, 1:num_grid_points(i));
+    grid(ind + 1:ind+num_grid_points(i)) = z_grid(i, 1:num_grid_points(i));
+    v(ind + 1:ind+num_grid_points(i)) = v_grid(i, 1:num_grid_points(i));
     ind = ind + num_grid_points(i);
 end
 
@@ -259,14 +273,14 @@ options = odeset('RelTol', ep, 'AbsTol',ep);
 for i=2:num_clus-1
     %within the support
     %define the parameters of an interval in the support
-    endpoint_1 = u_endpoints(i-1); %lower endpoint in f-space
-    endpoint_2 = l_endpoints(i); %upper endpoint in f-space
+    endpoint_1 = z_u_endpoints(i-1); %lower endpoint in f-space
+    endpoint_2 = z_l_endpoints(i); %upper endpoint in f-space
     l_hat(i-1) = endpoint_1;
     u_hat(i-1) = endpoint_2;
     
     %the grid within the i-th support interval
     grid_current = linspace(endpoint_1,endpoint_2,M)';
-    x(:,i-1) = grid_current;
+    v_x(:,i-1) = grid_current;
     
     %find starting point for ODE using iterative method:
     [~,~,v_start] =  compute_esd_fp(t,w,gamma,epsilon, grid_current(1));
@@ -281,8 +295,8 @@ for i=2:num_clus-1
     ind = ind + M;
     
     %add in the corresponding interval outside the suppost
-    grid(ind + 1:ind+num_grid_points(i)) = f_grid(i, 1:num_grid_points(i));
-    v(ind + 1:ind+num_grid_points(i)) = m_grid(i, 1:num_grid_points(i));
+    grid(ind + 1:ind+num_grid_points(i)) = z_grid(i, 1:num_grid_points(i));
+    v(ind + 1:ind+num_grid_points(i)) = v_grid(i, 1:num_grid_points(i));
     ind = ind + num_grid_points(i);
 end
 

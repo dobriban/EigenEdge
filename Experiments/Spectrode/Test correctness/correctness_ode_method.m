@@ -54,7 +54,7 @@ for i=1:3;
     theor_density = 1/pi*imag(m_theor);
     err= density_ode -theor_density;
     
-    ind = (min(find(theor_density>0)):max(find((theor_density>0))));
+    ind = find(theor_density>0);
     
     h = plot(grid(ind),log10(abs(err(ind))),'linewidth',3,'color',rand(1,3));
     set(h,'LineStyle',a{i});

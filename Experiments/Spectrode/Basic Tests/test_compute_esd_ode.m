@@ -6,10 +6,11 @@ a = 0.5;
 b = 1.5;
 K = 6;
 [t,w]  = geometric_model(a,b,K);
-gamma = 0.5;
+gamma = 2;
 epsi  = 1e-6;
-[grid,density,~,~,~,K_hat] =  compute_esd_ode(t,w,gamma,epsi);
+[grid,density,~,~,~,K_hat] =  compute_esd_ode(t,w,gamma,epsi,'brent');
 %
+figure, 
 plot(grid, density/max(density),'r','LineWidth',4)
 %% empirical eigenvalues
 p = 100;
