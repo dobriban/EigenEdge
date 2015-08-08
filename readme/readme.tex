@@ -350,12 +350,19 @@ In addition to the main wrapper \textsc{Spectrode}, we also provide direct acces
 
 \subsubsection{\sc{Spectrode}}
 
-The \textsc{Spectrode} method can be accessed directly in the following way. The arguments have the same format and meaning as for the main \verb+spectrode()+ function. 
+The \textsc{Spectrode} method, which is based on solving an ODE, can be accessed directly in the following way. The arguments have the same format and meaning as for the main \verb+spectrode()+ function. 
 
 \begin{verbatim}
 [grid, density, m, v, mass_at_0, K_hat, l_hat, u_hat, x, f_hat] = ...
-  compute_esd_ode(t, w, gamma,epsilon,M)
+  compute_esd_ode(t, w, gamma,epsilon,edge_finding, M)
 \end{verbatim}
+
+Note that there is a new parameter, \verb+edge_finding+. 
+\begin{itemize}
+\item \verb+edge_finding+:  specify the method by which the edges are computed. Available methods: 
+'grid' and `brent'. `grid':  (default) - computes the inverse Stieltjes Transform (ST) on a grid, and finds increasing intervals; 
+'brent' - uses Brent's method to find increasing intervals of ST.
+\end{itemize}
 
 Example:
 
@@ -413,7 +420,7 @@ The outputs are:
 \item \verb+numIter+: number of iterations taken by the algorithm for each element of the grid. A real vector of the same length as the grid
 \item \verb+stepSize+: last stepsize taken by the algorithm for each element of
 the grid. A real vector of the same length as the grid
-\item \verb+v_d+: estimate of the derivatves of the Gram Stieltjes transform of f on the grid. A complex vector of the same length as the grid
+\item \verb+v_d+: estimate of the derivatves of the companion Stieltjes transform of f on the grid. A complex vector of the same length as the grid
 
 \end{itemize}
 

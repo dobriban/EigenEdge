@@ -79,8 +79,9 @@ K_hat = NaN; l_hat = NaN; u_hat = NaN; x = NaN; f_hat = NaN;
 switch q.alg
     case 'spectrode'
         if isempty(q.r)
+            edge_method = 'grid';
             [grid, density, m, v, mass_at_0, K_hat, l_hat, u_hat, x, f_hat] = ...
-                compute_esd_ode(q.t, q.w, q.gamma,q.epsilon,q.M);
+                compute_esd_ode(q.t, q.w, q.gamma,q.epsilon,edge_method,q.M);
         else
             [grid, density, m, v, mass_at_0, K_hat, l_hat, u_hat, x, f_hat] = ...
                 compute_esd_ode_non_atomic(q.t, q.w, q.gamma, q.r,q.w_int,q.epsilon,q.M);

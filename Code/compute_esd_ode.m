@@ -12,6 +12,9 @@ function [grid, density, m, v, mass_at_0, K_hat, l_hat, u_hat, v_x, f_hat] = ...
 % gamma - aspect ratio p/n
 % w - mixture weights >=0; default: w = uniform
 % epsilon - square root of the imaginary part of the grid where MP is solved
+% edge_finding - specify the method by which the edges are computed. 'grid'
+% - default - computes the inverse ST on a grid; 'brent' - uses Brent's
+% method to find increasing intervals of ST.
 % M - number of grid points in each interval of the support
 
 %Outputs
@@ -33,6 +36,7 @@ function [grid, density, m, v, mass_at_0, K_hat, l_hat, u_hat, v_x, f_hat] = ...
 if ~exist('epsilon','var')
     epsilon = 1e-4;
 end
+delta_v = sqrt(epsilon);
 
 p = length(t);
 if ~exist('w','var')
@@ -92,11 +96,10 @@ if (gamma <1) %if need to look at lower half
                 v_L = 10*(v_L - min(B)) + min(B);
                 v_0 = [v_L+epsilon, min(B)-epsilon]; % initial interval
             end
-            v_x = fzero(z_prime_equiv,v_0,options);
+            v_x = fzero(z_prime_equiv,v_0,options); %v_L<v_x<v_U, and [v_L,v_x] is interesting region
             z_u_endpoints(num_clus) = z(v_x);
-            v_delta = (z_u_endpoints(num_clus)-z_l_endpoints(num_clus))/(M+2);
-            v_local = (z_l_endpoints(num_clus)+epsilon:v_delta:z_u_endpoints(num_clus))';
-            [num_grid_points(num_clus), z_grid(num_clus,1:length(v_local)), v_grid(num_clus,1:length(v_local))] = grid_output(v_local,z);
+            v_local = linspace(v_L,v_x,M);
+            [num_grid_points(num_clus), z_grid(num_clus,1:M), v_grid(num_clus,1:M)] = grid_output(v_local,z);
     end
 else
     num_grid_points(num_clus) = 0;
@@ -106,11 +109,10 @@ end
 for i = 1:num_unique-1
     v_L = B(i); %lower endpoint -1/t
     v_U = B(i+1); %upper endpoint -1/t
-    v_delta = (v_U-v_L)/(M+2);
     %Find the edges of the spectrum
     switch edge_finding
         case 'grid'
-            v= linspace(v_L+v_delta, v_U-v_delta, M); %adaptive grid-forming
+            v= linspace(v_L+epsilon, v_U-epsilon, M); %adaptive grid-forming
             [grid, ~, ~,~,~,decreasing,local_min,local_max, local_min_ind, local_max_ind] ...
                 =  evaluate_inverse_ST(t,w,gamma, v);
             if (decreasing==0)
@@ -123,30 +125,33 @@ for i = 1:num_unique-1
                 v_grid(num_clus,1:c) = v(local_min_ind:local_max_ind);
             end
         case 'brent'
-            v_0 = [v_L+v_delta, v_U-v_delta]; % initial interval
+            v_0 = [v_L+delta_v, v_U-delta_v]; % initial interval
             while (z_double_prime_equiv(v_0(1))*z_double_prime_equiv(v_0(2))>0)
-                v_delta = v_delta/2;
-                v_0 = [v_L+v_delta, v_U-v_delta];
+                delta_v = delta_v/2;
+                v_0 = [v_L+delta_v, v_U-delta_v];
             end
-            v_x = fzero(z_double_prime_equiv,v_0,options);
+            m0 = max(z_double_prime_equiv(v_0(1)), z_double_prime_equiv(v_0(2)));
+            z_2_n = @(v) z_double_prime_equiv(v)/m0;
+            v_x = fzero(z_2_n,v_0,options);
             if (z_prime_equiv(v_x)<0)
                 num_clus = num_clus + 1;
-                v_0 = [v_L+v_delta v_x]; %to the left of the point where z''=0
+                v_0 = [v_L+delta_v v_x]; %to the left of the point where z''=0
                 while (z_prime_equiv(v_0(1))*z_prime_equiv(v_0(2))>0)
-                    v_delta = v_delta/2;
-                    v_0 =  [v_L+v_delta v_x];
+                    delta_v = delta_v/2;
+                    v_0 =  [v_L+delta_v v_x];
                 end
                 left_zero = fzero(z_prime_equiv,v_0,options);
                 z_l_endpoints(num_clus) = z(left_zero);
-                v_0 = [v_x v_U-v_delta]; %to the right of the point where z''=0
+                v_0 = [v_x v_U-delta_v]; %to the right of the point where z''=0
                 while (z_prime_equiv(v_0(1))*z_prime_equiv(v_0(2))>0)
-                    v_delta = v_delta/2;
-                    v_0 = [v_x v_U-v_delta];
+                    delta_v = delta_v/2;
+                    v_0 = [v_x v_U-delta_v];
                 end
                 right_zero = fzero(z_prime_equiv,v_0,options);
                 z_u_endpoints(num_clus) = z(right_zero);
-                v_local = (z_l_endpoints(num_clus):v_delta:z_u_endpoints(num_clus))';
-                [num_grid_points(num_clus), z_grid(num_clus,1:length(v_local)), v_grid(num_clus,1:length(v_local))] = grid_output(v_local,z);
+                v_local = linspace(left_zero,right_zero,M);  %possible bug here
+                %v_local = (z_l_endpoints(num_clus):v_delta:z_u_endpoints(num_clus))';
+                [num_grid_points(num_clus), z_grid(num_clus,1:M), v_grid(num_clus,1:M)] = grid_output(v_local,z);
             end
     end
 end
@@ -154,10 +159,9 @@ end
 %last interval between -1/t & 0
 v_L = B(num_unique);
 v_U = 0;
-v_delta = (v_U-v_L)/(M+2);
 switch edge_finding
     case 'grid'
-        v= linspace(v_L+v_delta, v_U-v_delta, M); %adaptive grid-forming
+        v= linspace(v_L+epsilon, v_U-epsilon, M); %adaptive grid-forming
         [grid, minf,ind_min] = evaluate_inverse_ST(t,w,gamma, v);
         num_clus = num_clus + 1;
         z_l_endpoints(num_clus)  = minf;
@@ -168,17 +172,17 @@ switch edge_finding
         v_grid(num_clus,1:c) = v(ind_min:M);
         
     case 'brent'
-        v_0 = [v_L+v_delta v_U-v_delta]; % initial interval in v
+        v_0 = [v_L+epsilon v_U-epsilon]; % initial interval in v
         while (z_prime_equiv(v_0(1))*z_prime_equiv(v_0(2))>0)
             v_L = 10*(v_L - min(B)) + min(B);
-            v_0 = [v_L+v_delta, min(B)-v_delta]; % initial interval
+            v_0 = [v_L+epsilon, min(B)-epsilon]; % initial interval
         end
         v_x = fzero(z_prime_equiv,v_0,options); %value of v where z'(v0)=0
         num_clus = num_clus + 1;
         z_l_endpoints(num_clus) = z(v_x); %z(v0)
         z_u_endpoints(num_clus) = Inf;
-        v_local = (v_x:v_delta:v_U-v_delta)';
-        [num_grid_points(num_clus), z_grid(num_clus,1:length(v_local)), v_grid(num_clus,1:length(v_local))] = grid_output(v_local,z);
+        v_local = linspace(v_x,v_U,M)';
+        [num_grid_points(num_clus), z_grid(num_clus,1:M), v_grid(num_clus,1:M)] = grid_output(v_local,z);
 end
 
 %the positive line: between 0 and inf
@@ -208,9 +212,8 @@ if (gamma >1) %if upper half maximum may exceed 0
             end
             v_x = fzero(z_prime_equiv,v_0,options);
             z_u_endpoints(num_clus) = z(v_x);
-            v_delta=(v_U-v_x)/M;
-            v_local = (v_x:v_delta:v_U-epsilon)';
-            [num_grid_points(num_clus), z_grid(num_clus,1:length(v_local)), v_grid(num_clus,1:length(v_local))] = grid_output(v_local,z);
+            v_local = linspace(epsilon,v_x,M)';
+            [num_grid_points(num_clus), z_grid(num_clus,1:M), v_grid(num_clus,1:M)] = grid_output(v_local,z);
     end
 else %if gamma<1, this interval gives me the whole region m>0;
     %know that the function is strictly increasing in this case

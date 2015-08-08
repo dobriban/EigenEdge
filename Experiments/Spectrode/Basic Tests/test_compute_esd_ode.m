@@ -6,7 +6,7 @@ a = 0.5;
 b = 1.5;
 K = 6;
 [t,w]  = geometric_model(a,b,K);
-gamma = 2;
+gamma = 1/2;
 epsi  = 1e-6;
 [grid,density,~,~,~,K_hat] =  compute_esd_ode(t,w,gamma,epsi,'brent');
 %

@@ -3,7 +3,7 @@
 % Null case where all eigenvalues are equal to 1
 p = 200;
 gamma = 1/2;
-K = 5;
+K = 8;
 epsi_array = linspace(1,K,K);
 t = 1;
 w = 1;

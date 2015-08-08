@@ -19,7 +19,8 @@ for i=1:length(epsi_array)
   epsi = epsi_array(i);
   for j=1:length(gamma_array)
     gamma = gamma_array(j);
-    [grid, density, m, v, mass_at_0, K_hat, l_hat, u_hat, x, f_hat] =  compute_esd_ode(t, w, gamma,epsi,'brent');
+    method = 'brent'; %or 'grid'
+    [grid, density, m, v, mass_at_0, K_hat, l_hat, u_hat, x, f_hat] =  compute_esd_ode(t, w, gamma,epsi',method);
     tic
     %get gold standard: K, support boundary
     epsi_iter  = 1e-7;
@@ -50,7 +51,7 @@ set(gca,'fontsize',20)
 h = legend('\gamma = 1/2^5','\gamma = 1/2^4','\gamma = 1/2^3','\gamma = 1/2^2');
 set(h,'FontSize',20);
 %%
-filename = sprintf( './identify_number_of_intervals_support.png');
+filename = sprintf(['./identify_number_of_intervals_support_' method '.png']);
 saveas(gcf, filename,'png');
 fprintf(['Saved Results to ' filename '\n']);
 
@@ -82,6 +83,6 @@ set(h,'FontSize',20);
 xlim([min(-log10(epsi_array)), max(-log10(epsi_array))]);
 
 %%
-filename = sprintf( './identify_endpoints_support.png');
+filename = sprintf(['./identify_endpoints_support_' method '.png']);
 saveas(gcf, filename,'png');
 fprintf(['Saved Results to ' filename '\n']);

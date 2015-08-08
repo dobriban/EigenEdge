@@ -14,7 +14,8 @@ for i=1:3;
     MP_density = @(x) 1/(2*pi*gamma)* sqrt(max((gamma_plus-x).*(x-gamma_minus),0))./x;
     epsilon = 10.^(-epsi_array(i));
     w = 1;
-    [grid, density_ode,m, mass_at_0] = compute_esd_ode(t,w,gamma,epsilon);
+    method = 'brent';
+    [grid, density_ode,m, mass_at_0] = compute_esd_ode(t,w,gamma,epsilon,method);
     theor_density = MP_density(grid);
     err= density_ode-theor_density;
     
@@ -29,7 +30,7 @@ ylabel('\Delta(x_i,\epsilon)');
 %figtitle('Numerical error as a function of tolerance');
 set(h,'FontSize',20);
 %% plot
-filename = sprintf( './Correctness_tests_numerical_error_null.png');
+filename = sprintf(['./Correctness_tests_numerical_error_null_' method '.png']);
 saveas(gcf, filename,'png');
 fprintf(['Saved Results to ' filename '\n']);
 
@@ -49,7 +50,8 @@ figure, hold on
 for i=1:3;
     
     epsilon = 10.^(-epsi_array(i));
-    [grid, density_ode, m, mass_at_0] = compute_esd_ode(t,w,gamma, epsilon);
+    method = 'brent'; %'brent' or 'gird'
+    [grid, density_ode, m, mass_at_0] = compute_esd_ode(t,w,gamma, epsilon,method);
     [m_theor] = SparseStieltjes2(grid,gamma,1/2,tau);
     theor_density = 1/pi*imag(m_theor);
     err= density_ode -theor_density;
@@ -66,6 +68,6 @@ ylabel('\Delta(x_i,\epsilon)');
 %figtitle('Numerical error as a function of tolerance');
 set(h,'FontSize',20);
 %% plot
-filename = sprintf( './Correctness_tests_numerical_error_two-point.png');
+filename = sprintf(['./Correctness_tests_numerical_error_two-point_' method '.png']);
 saveas(gcf, filename,'png');
 fprintf(['Saved Results to ' filename '\n']);
