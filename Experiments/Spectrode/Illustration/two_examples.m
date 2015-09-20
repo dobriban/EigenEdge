@@ -6,7 +6,7 @@ gap = 0.01;
 t_min = 1;
 t_max = 10;
 K = 10;
-[t,w]  = arithmetic_model(K, t_min,t_max,gap);
+[t,w]  = comb_model(K, t_min,t_max,gap);
 w = 1/2*w;
 t = 1+ t;
 
@@ -40,6 +40,24 @@ h = legend( 'Empirical Eigenvalues','Theoretical Prediction','Location','best');
 set(h,'FontSize',20);
 %% save plot
 filename = sprintf( './Illustration_mixture.png');
+saveas(gcf, filename,'png');
+fprintf(['Saved Results to ' filename '\n']);
+
+%% grayscale
+col = colormap(gray(10));
+figure
+hold on
+h = bar(locations,heights);
+%set(h,'color',col(1,:));
+h = plot(grid, density/max(density),'LineWidth',5);
+set(h,'color',col(7,:));
+set(gca,'fontsize',20)
+xlabel('Eigenvalues');
+h = legend( 'Empirical Eigenvalues','Theoretical Prediction','Location','best');
+set(h,'FontSize',20);
+
+%%
+filename = sprintf( './bw_Illustration_mixture.png');
 saveas(gcf, filename,'png');
 fprintf(['Saved Results to ' filename '\n']);
 
