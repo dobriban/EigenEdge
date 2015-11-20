@@ -1,4 +1,4 @@
-function [grid, density, m, v, mass_at_0, K_hat, l_hat, u_hat, v_x, f_hat] = ...
+function [grid, density, m, v, mass_at_0, K_hat, l_hat, u_hat, v_x, f_hat,grid_large,v_large,a,b] = ...
     compute_esd_ode(t, w, gamma,epsilon,edge_finding,M)
 %Compute limit spectrum of covariance matrices with ODE method
 %uses the inverse of the Stieltjes transform obtained by Silverstein&Choi
@@ -32,6 +32,8 @@ function [grid, density, m, v, mass_at_0, K_hat, l_hat, u_hat, v_x, f_hat] = ...
 %       real matrix of size M x K_hat; column i contains the i-th support
 %       interval
 % f_hat - numerical approximation of density on grid x; same format as x
+% grid_large,v_large - positive entries of the grid, with their v values
+% a,b - intervals where v is increasing
 
 if ~exist('epsilon','var')
     epsilon = 1e-4;
@@ -247,9 +249,16 @@ l_hat =zeros(K_hat,1);
 u_hat =zeros(K_hat,1);
 v_x = zeros(M,K_hat);
 f_hat = zeros(M,K_hat);
+a = zeros(K_hat+1,1);
+b = zeros(K_hat+1,1);
 
 grid(1:num_grid_points(num_clus)) = z_grid(num_clus, 1:num_grid_points(num_clus));
 v(1:num_grid_points(num_clus)) = v_grid(num_clus, 1:num_grid_points(num_clus));
+%store the increasing intervals
+ind_ep =1;
+a(ind_ep) = v_grid(num_clus, 1);
+%b(ind_ep) = v_grid(num_clus, num_grid_points(num_clus));
+b(ind_ep) = Inf;
 ind = num_grid_points(num_clus); %current index
 
 %if gamma>1 need to set the u-endpoint to higher than 0
@@ -262,14 +271,24 @@ if (gamma < 1)
     i = 1;
     grid(ind + 1:ind+num_grid_points(i)) = z_grid(i, 1:num_grid_points(i));
     v(ind + 1:ind+num_grid_points(i)) = v_grid(i, 1:num_grid_points(i));
+    ind_ep  = ind_ep+1;
+    a(ind_ep) = -Inf;
+    b(ind_ep) = v_grid(i, num_grid_points(i));
     ind = ind + num_grid_points(i);
 end
 
+%store the increasing intervals
+for i=2:num_clus-1
+ind_ep =ind_ep+1;
+a(ind_ep) = v_grid(i, 1);
+b(ind_ep) = v_grid(i, num_grid_points(i));
+end
+  
 %functions for ODE solving
 MP_diff = @(time,v) (1/v^2 - gamma* sum( w.*(t.^(-1) + v).^(-2)))^(-1);
 ep = epsilon;
 options = odeset('RelTol', ep, 'AbsTol',ep);
-
+ 
 %from now on, can handle all points in a uniform way
 %have num_clus-2 pairs of intervals left: look at the support first, then
 %outside
@@ -305,6 +324,8 @@ end
 
 %retain the relevant part of the grid
 good_ind = (grid>0)&(grid<(1+sqrt(gamma))^2*max(t)*1.1);
+grid_large = grid(grid>0);
+v_large = v(grid>0);
 grid = grid(good_ind);
 v = v(good_ind);
 
