@@ -1,0 +1,32 @@
+Have plots for 
+
+(1)
+gamma = 1/2; %aspect ratio gamma = p/n
+
+%Null
+J =2;
+mini = 1; maxi = 3;
+t = linspace(mini,maxi,J)'; %spikes
+w_null = 1/J*ones(J,1);
+
+%Alternative (one spike)
+k=10; %number of trials
+mini = 0.1; maxi = (1+sqrt(gamma))^2*maxi;
+spikes_arr = linspace(mini,maxi,k)'; %spikes
+num_spikes=1;
+
+
+(2)
+gamma = 1/10; %aspect ratio gamma = p/n
+
+%Null
+J =2;
+mini = 1; maxi = 3;
+t = linspace(mini,maxi,J)'; %spikes
+w_null = 1/J*ones(J,1);
+
+%Alternative (one spike)
+k=20; %number of trials
+mini = 0.1; maxi = (1+sqrt(gamma))^2*maxi;
+spikes_arr = linspace(mini,maxi,k)'; %spikes
+num_spikes=1;

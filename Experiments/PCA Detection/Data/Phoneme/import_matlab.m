@@ -8,7 +8,7 @@
 %the actual analysis script is in data_analysis.m
 %% Initialize variables.
 %rename this to the path of the phoneme data
-filename = 'C:\Dropbox\Projects\Optimal LSS\Data\Phoneme\phoneme.data';
+%filename = '...\Data\Phoneme\phoneme.data';
 delimiter = ',';
 startRow = 2;
 
