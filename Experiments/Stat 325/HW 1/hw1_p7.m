@@ -1,4 +1,4 @@
-%% Compute and plot optimal LSS
+%% Partial solution to Problem 7 in HW1, from STAT 325
 cd('C:\Git\EigenEdge\Experiments\Stat 325\HW 1')
 addpath('..\..\..\Code')
 %% Compute quantiles of MP law
