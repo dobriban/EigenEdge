@@ -17,4 +17,8 @@ end
 
 [grid,density, ~, ~, mass_at_0] = compute_esd_ode(t, w, gamma,epsilon);
 
-y = esd_quantile_grid(grid,density,mass_at_0,q);
+if length(q)==1
+    y = esd_quantile_grid(grid,density,mass_at_0,q);
+else
+    y = esd_all_quantiles_grid(grid,density,mass_at_0,q);
+end
