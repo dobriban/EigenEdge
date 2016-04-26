@@ -27,8 +27,13 @@ if companion==0
 else
     %rescale everything to companion
     density_companion = 1/pi*imag(v);
-    %m = 1/gamma*v- (1-1/gamma)./grid;
-    mass_at_0_companion = (1-gamma)+gamma*mass_at_0;
+    if gamma>1
+        mass_at_0_companion = 0;
+    else
+        %mass_at_0 = max(0, 1-gamma^(-1)*(1-p0));
+        p0 = sum(w.*(t==0));
+        mass_at_0_companion = max(0, 1-gamma*(1-p0));
+    end 
     y = esd_moment_grid(grid,density_companion,mass_at_0_companion,fun);
 end
 
