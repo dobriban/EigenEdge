@@ -335,7 +335,7 @@ for i=2:num_clus-1
     %the grid within the i-th support interval
     %adaptively set the grid length to have an accuracy approximately
     %sqrt(ep) within the support interval
-    M_curr = floor((endpoint_2-endpoint_1)/sqrt(epsilon))+1;
+    M_curr = floor((endpoint_2-endpoint_1)/sqrt(epsilon))+10; 
     grid_current = linspace(endpoint_1,endpoint_2,M_curr)';
     v_x(i-1) = {grid_current};
     
