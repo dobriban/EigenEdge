@@ -16,8 +16,8 @@ of the covariance type.
 ## Additional contents
 
 This package also has the software to reproduce the computational results of the following papers of the author: 
-* Dobriban. E,  *Efficient Computation of Limit Spectra of Sample Covariance Matrices*, Random Matrices: Theory Appl., 04, 1550019 (2015). arxiv.org/abs/1507.01649
-* Dobriban. E,  *Sharp detection in PCA under correlations: all eigenvalues matter*, arxiv.org/abs/1602.06896
+* Dobriban. E,  *Efficient Computation of Limit Spectra of Sample Covariance Matrices*, Random Matrices: Theory Appl., 04, 1550019 (2015). http://arxiv.org/abs/1507.01649
+* Dobriban. E,  *Sharp detection in PCA under correlations: all eigenvalues matter*, http://arxiv.org/abs/1602.06896
 
 ## Installation
 
