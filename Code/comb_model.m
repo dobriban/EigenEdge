@@ -1,5 +1,6 @@
 function [t, w]  = comb_model(K, t_min,t_max,gap)
 %compute a population spectrum from the comb model
+%Used in Spectrode examples
 
 if ( K*(K-1)*gap /2 >=1)
   error('The gap needs to be small enough that K*(K-1)*gap /2 <1');

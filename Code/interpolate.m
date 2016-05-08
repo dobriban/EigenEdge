@@ -1,6 +1,7 @@
 function v_x = interpolate(x,grid,v_grid)
 %interpolate the function "v_grid" defined on the grid "grid"
 %onto the new grid "x"
+%Used in computing optimal LSS
 
 %Uses linear interpolation
 j=1;

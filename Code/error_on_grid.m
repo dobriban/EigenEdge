@@ -1,6 +1,7 @@
 function [l_err,u_err] = error_on_grid(f,K_hat, l_hat, u_hat, K,ind_l,ind_u)
 %compute bound on error on the grid f
-%used in the support identificatio experiments
+%Used in the Support identification experiment in the Spectrode paper. 
+
 K_err = abs(K-K_hat);
 
 if (K_err>0)

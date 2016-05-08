@@ -1,7 +1,8 @@
 function s = random_discrete_draw(t,w,p)
 % p random draws from the discrete distribution
 % H = sum_k w_k Delta_t_k
-%
+% Used in Spectrode tests. 
+
 % Inputs
 % t,w - parameters of atomic distribution: H = sum w_i*delta_{t_i}
 % p - number of samples

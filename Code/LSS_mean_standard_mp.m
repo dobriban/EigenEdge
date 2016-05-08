@@ -1,4 +1,8 @@
-function int = contour_int_standard_mp(g, gamma,epsilon)
+function int = LSS_mean_standard_mp(g, gamma,epsilon)
+%compute the mean of a LSS g in the standard MP model
+%this is a contour integral 
+
+%Used in the Examples of the Spectrode paper. 
 
 if ~exist('epsilon','var')
     epsilon = 1e-10;

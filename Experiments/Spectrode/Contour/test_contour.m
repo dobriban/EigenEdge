@@ -10,15 +10,15 @@ num_val = zeros(A,1);
 true_val = zeros(A,1);
 %%
 g = @(x) x;
-num_val(1) = contour_int_standard_mp(g, gamma);
+num_val(1) = LSS_mean_standard_mp(g, gamma);
 true_val(1) = 0;
 %%
 g = @(x) log(x);
-num_val(2) = contour_int_standard_mp(g, gamma);
+num_val(2) = LSS_mean_standard_mp(g, gamma);
 true_val(2) = 1/2*log(1-gamma);
 %%
 g = @(x) log(x).^2;
-num_val(3) = contour_int_standard_mp(g, gamma);
+num_val(3) = LSS_mean_standard_mp(g, gamma);
 true_val(3) = NaN;
 
 %%

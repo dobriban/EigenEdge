@@ -4,6 +4,7 @@ function s = random_draw_disc_unif(t,w,r,w_int,p)
 % where
 % delta_a  - point mass at a
 % unif(a,b) - uniform distribution on [a,b]
+% Used in several Spectrode examples.
 
 %
 % Inputs

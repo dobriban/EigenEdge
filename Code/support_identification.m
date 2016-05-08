@@ -1,6 +1,6 @@
 function [K,l,u,final_l,final_u] = support_identification(grid,density,thresh)
 %support identification using thresholding
-
+%Used in the Support identification experiment in the Spectrode paper. 
 support_int = find(1/pi*imag(density)>thresh);
 non_support_int = find(1/pi*imag(density)<=thresh);
 K = 0;
