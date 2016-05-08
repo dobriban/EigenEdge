@@ -8,7 +8,7 @@ of the covariance type (known as general Marchenko-Pastur distributions).
 
 ## Contents 
 
-* a documentation with examples: `\Readme\readme.pdf`
+* a documentation with examples: [readme.pdf](https://github.com/dobriban/EigenEdge/blob/master/readme/readme.pdf)
 * the SPECTRODE method to compute the limit empirical spectrum of sample covariance matrices (equivalently: compute the Marchenko-Pastur forward map) 
 * methods to compute moments and quantiles of the limit spectrum 
 * optimal linear spectral statistics (LSS) for testing in Principal Component Analysis
