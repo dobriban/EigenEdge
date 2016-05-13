@@ -104,3 +104,5 @@ J_1 =integral2(c,0,2*pi,0,2*pi);
 
 %1. Empirically, does J_1(phi_{x,h},phi_{x,h}) tend to a limit?
 %2. Theoretically? 
+
+K = cov_kernel_standard_mp(x,y,gamma);
