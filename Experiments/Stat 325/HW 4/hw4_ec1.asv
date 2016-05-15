@@ -126,10 +126,7 @@ if savefigs==1
 end
 
 %% Calculate the limit of the variance expression
-%the approximation converges indeed, but get NaNs for sufficiently high
-%accuracies h
-%this is because the function \phi_x,h is not smooth anymore, so its
-%derivative become infinite, and the integral diverges at x
+%the approximation converges indeed, but get NaNs for sufficientl
 x = 1;
 h_grid = 10.^(-6:1:0);
 d = sqrt(gamma);

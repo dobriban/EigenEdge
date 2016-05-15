@@ -14,9 +14,9 @@ function K = cov_kernel_standard_mp(x,y,gamma)
 %v(x) is the companion ST of the MP distribution with aspect ratio gamma
 
 K = zeros(length(x),length(y));
-v_x = v_white(x,gamma);
-v_y = v_white(y,gamma);
-K_f = @(i,j) 1/(2*pi^2)*log(1 + 4.*imag(v_x(i)).*imag(v_y(j))./abs(v_x(i)-v_y(j)).^2);
+v_x = v(x,gamma);
+v_y = v(y,gamma);
+K_f = (i,j) 1/(2*pi^2)*log(1 + 4.*imag(v_x(i)).*imag(v_y(j))./abs(v_x(i)-v_y(j)).^2);
 multi = 1.5;
 for i = 1:length(x)
     for j = 1:length(y)

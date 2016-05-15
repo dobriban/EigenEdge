@@ -1,4 +1,4 @@
-function companion_st =v(z,gamma)
+function companion_st =v_white(z,gamma)
 %compute the companion Stieltjes transform of white MP law
 %evaluated on a grid z
 
