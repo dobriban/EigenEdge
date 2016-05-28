@@ -22,7 +22,7 @@ end
 
 %special case: standard MP
 if (t==1)&&(w==1)
-    gamma_plus = (1+sqrt(gamma))^2; 
+    gamma_plus = (1+sqrt(gamma))^2;
     gamma_minus = (1-sqrt(gamma))^2;
     MP_density = @(x) 1/(2*pi*gamma)* sqrt(max((gamma_plus-x).*(x-gamma_minus),0))./x;
     y = integral(@(x)MP_density(x).*fun(x),gamma_minus,gamma_plus);
