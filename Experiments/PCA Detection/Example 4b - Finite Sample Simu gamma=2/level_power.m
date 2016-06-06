@@ -39,7 +39,7 @@ power_LSS= zeros(length(spikes_arr(:,1)),1);
 power_eigmax = zeros(length(spikes_arr(:,1)),1);
 
 %First get the null distribution/critical value for the top eigenvalue
-nMonte = 1e2; %1e3
+nMonte = 5*1e2; %1e3
 eig_max =  zeros(nMonte,1);
 
 print_iter=1;
