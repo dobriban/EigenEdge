@@ -9,8 +9,8 @@ alpha = 0.05;
 n = 5*1e2;%1e3;
 p = floor(n*gamma);
 
-eig_model = 'ones';
-%eig_model = 'toeplitz';
+%eig_model = 'ones';
+eig_model = 'toeplitz';
 switch eig_model
     case 'toeplitz'
         
@@ -32,14 +32,14 @@ switch eig_model
 end
 
 s_null = 1; %the null spike
-num_spikes=20; %5 or 20
+num_spikes=10; %5 or 20
 spikes_arr =linspace(1.01,s1,num_spikes)'; %spikes
 %spikes_arr = (1+sqrt(gamma))*1.1;
 power_LSS= zeros(length(spikes_arr(:,1)),1);
 power_eigmax = zeros(length(spikes_arr(:,1)),1);
 
 %First get the null distribution/critical value for the top eigenvalue
-nMonte = 1e3;
+nMonte = 1e2; %1e3
 eig_max =  zeros(nMonte,1);
 
 print_iter=1;

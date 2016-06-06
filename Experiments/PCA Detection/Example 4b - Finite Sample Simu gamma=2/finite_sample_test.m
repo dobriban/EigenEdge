@@ -8,7 +8,7 @@
 %% Several plots: Toeplitz null and one-spike alternative
 %% scree plot, LSS, and distrib of LSS under null and alternative.
 a = {'-','--','-.',':'};       plotfigs=1;  savefigs =1;
-gamma = 1/2; %aspect ratio gamma = p/n
+gamma = 2; %aspect ratio gamma = p/n
 
 %Null - Toeplitz
 n=500;
@@ -57,8 +57,8 @@ for i=1:length(spikes_arr(:,1))
         title('Pop Alt')
         
         if savefigs==1
-            filename = sprintf( './Img/pop hist toeplitz gamma = %.2f rho = %.2f spike = %.2f h=%d.png',...
-                gamma,rho,s_alt(1),length(s_alt));
+            filename = sprintf( './Img/rho %.1f/pop hist toeplitz gamma = %.2f rho = %.2f spike = %.2f h=%d.png',...
+                rho,gamma,rho,s_alt(1),length(s_alt));
             saveas(gcf, filename,'png');
             fprintf(['Saved Results to ' filename '\n']);
             close(gcf)
