@@ -5,6 +5,8 @@ The focus is on covariance-type, or "general Marchenko-Pastur" distributions.
 
 These tools can be used in high-dimensional statistics, wireless communications, and finance, among other areas.
 
+If you are interested in trying this out, have suggestions, or think this may have applications to your field, please do not hesitate to get in touch with me. 
+
 ## Contents 
 
 * a documentation with examples: [readme.pdf](https://github.com/dobriban/EigenEdge/blob/master/readme/readme.pdf)
