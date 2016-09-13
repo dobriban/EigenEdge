@@ -3,7 +3,7 @@ The **EigenEdge** MATLAB package contains open source implementations
 of methods for working with eigenvalue distributions of large random matrices. 
 The focus is on covariance-type, or "general Marchenko-Pastur" distributions. 
 
-These tools can be used in high-dimensional statistics, wireless communications, finance, among other areas.
+These tools can be used in high-dimensional statistics, wireless communications, and finance, among other areas.
 
 ## Contents 
 
@@ -13,11 +13,13 @@ These tools can be used in high-dimensional statistics, wireless communications,
 * optimal linear spectral statistics (LSS) for testing in Principal Component Analysis
 * spiked models: "forward" and "inverse" spike maps in standard and general spiked models
 
-## Additional contents
+## References
 
-This package also has the software to reproduce the computational results of the following papers: 
+This package is partially based on methods proposed in the following papers: 
 * Dobriban. E,  *Efficient Computation of Limit Spectra of Sample Covariance Matrices*, Random Matrices: Theory Appl., 04, 1550019 (2015). http://arxiv.org/abs/1507.01649
 * Dobriban. E,  *Sharp detection in PCA under correlations: all eigenvalues matter*, to appear in The Annals of Statistics. http://arxiv.org/abs/1602.06896
+
+The package also has the software to reproduce the computational results of the above papers. 
 
 ## Installation
 
