@@ -1,10 +1,9 @@
 # EigenEdge
-Computing with Eigenvalue Distributions of Large Random Matrices
-
 The **EigenEdge** MATLAB package contains open source implementations 
-of methods for working with eigenvalue distributions of large random matrices 
-of the covariance type (known as general Marchenko-Pastur distributions). 
+of methods for working with eigenvalue distributions of large random matrices. 
+The focus is on covariance-type, or "general Marchenko-Pastur" distributions. 
 
+These tools can be used in high-dimensional statistics, wireless communications, finance, among other areas.
 
 ## Contents 
 
@@ -12,12 +11,13 @@ of the covariance type (known as general Marchenko-Pastur distributions).
 * the SPECTRODE method to compute the limit empirical spectrum of sample covariance matrices (equivalently: compute the Marchenko-Pastur forward map) 
 * methods to compute moments and quantiles of the limit spectrum 
 * optimal linear spectral statistics (LSS) for testing in Principal Component Analysis
+* spiked models: "forward" and "inverse" spike maps in standard and general spiked models
 
 ## Additional contents
 
-This package also has the software to reproduce the computational results of the following papers of the author: 
+This package also has the software to reproduce the computational results of the following papers: 
 * Dobriban. E,  *Efficient Computation of Limit Spectra of Sample Covariance Matrices*, Random Matrices: Theory Appl., 04, 1550019 (2015). http://arxiv.org/abs/1507.01649
-* Dobriban. E,  *Sharp detection in PCA under correlations: all eigenvalues matter*, http://arxiv.org/abs/1602.06896
+* Dobriban. E,  *Sharp detection in PCA under correlations: all eigenvalues matter*, to appear in The Annals of Statistics. http://arxiv.org/abs/1602.06896
 
 ## Installation
 
@@ -26,6 +26,11 @@ For full notes on installing the package, please see the readme.
 ##Additional notes
 This package is work in progress. Suggestions and comments are welcome.
 An R version is under development, and is available from https://github.com/dobriban/Spectrode-R/
+
+##Acknowledgements
+The author is very grateful to the following indivuals for their invaluable advice, help, comments, bug submissions, etc. with this package:
+* Romain Couillet, Iain Johnstone, Jack Silverstein.
+* The students in STATS 325 "Random Matrix Theory and High-Dimensional Statistics" at Stanford University, Spring 2016. In particular: Jeha Yang, 	Simon Rosenberg. 
 
 #Example
 A typical example eigenvalue distribution computed with this software looks as follows: 
