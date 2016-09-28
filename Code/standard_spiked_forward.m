@@ -1,11 +1,11 @@
-function [lambda,cos_right,cos_left] = standard_spiked_forward(ell,gamma)
+function [lambda,cos_right,cos_left] = standard_spiked_forward(gamma,ell)
 %Compute the characteristics of the standard spiked model
 %Using explicit formulas
 
 %Input
+% gamma - aspect ratio p/n
 % ell - population spike location (null: ell=0, so that eigenvalue of population
 % covariance matrix is 1+ell)
-% gamma - aspect ratio p/n
 
 %Output
 %lambda - asymptotic sample spike location (eigenvalue)
