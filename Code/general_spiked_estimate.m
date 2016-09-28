@@ -1,9 +1,9 @@
-function [ell,cos_right,cos_left] = general_spiked_estimate(lambda,gamma,eigs)
+function [ell,cos_right,cos_left] = general_spiked_estimate(lambda,eigs,gamma)
 %Estimate the characteristics of the general spiked model
 %Input
 % lambda - empirical spike
-% gamma - aspect ratio p/n
 % eigs - empirical eigenvalues >=0
+% gamma - aspect ratio p/n
 
 %Output
 % ell - estimated population spike location
