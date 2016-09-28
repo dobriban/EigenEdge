@@ -1,12 +1,12 @@
-function [lambda,cos_right,cos_left] = general_spiked_forward(t, w, gamma,ell)
+function [lambda,cos_right,cos_left] = general_spiked_forward(ell, t, w, gamma)
 %Compute the characteristics of the general spiked model
 %Using the spectrode method
 
 %Input
+% ell - population spike location (null: ell=0)
 % t - population eigenvalues >=0
 % w - mixture weights >=0;
 % gamma - aspect ratio p/n
-% ell - population spike location (null: ell=0)
 
 %Output
 %lambda - asymptotic sample spike location
