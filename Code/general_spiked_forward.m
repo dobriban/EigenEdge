@@ -1,4 +1,4 @@
-function [lambda,cos_right,cos_left] = general_spiked_forward(ell, t, w, gamma)
+function [lambda,cos_right,cos_left,m,v] = general_spiked_forward(ell, t, w, gamma)
 %Compute the characteristics of the general spiked model
 %Using the spectrode method
 
@@ -11,6 +11,7 @@ function [lambda,cos_right,cos_left] = general_spiked_forward(ell, t, w, gamma)
 %Output
 %lambda - asymptotic sample spike location
 %cos_right,cos_left- squares of the right/left singular value angles
+%m,v - Stieltjes transform and companion ST
 
 ep = 1e-6;
 [~, ~, ~, ~, ~, ~, ~, u_hat,~, ~,grid,v] =   compute_esd_ode(t, w, gamma,ep);
@@ -52,3 +53,7 @@ else
     cos_right = 0;
     cos_left = 0;
 end
+
+%vq = interp1(x,v,xq) interpolated values of a 1-D function using linear interpolation
+v = interp1(grid,v,ell);
+m = 1/gamma*v- (1-1/gamma)./ell;
