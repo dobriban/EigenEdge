@@ -18,8 +18,8 @@ If you are interested in trying this out, have suggestions, or think this may ha
 ## References
 
 This package is partially based on methods proposed in the following papers: 
-* Dobriban. E,  *Efficient Computation of Limit Spectra of Sample Covariance Matrices*, Random Matrices: Theory Appl., 04, 1550019 (2015). http://arxiv.org/abs/1507.01649
-* Dobriban. E,  *Sharp detection in PCA under correlations: all eigenvalues matter*, to appear in The Annals of Statistics. http://arxiv.org/abs/1602.06896
+* Dobriban. E,  *Efficient Computation of Limit Spectra of Sample Covariance Matrices*, Random Matrices: Theory Appl., 04, 1550019 (2015). https://github.com/dobriban/Papers/blob/master/Dobriban%20-%20Efficient%20computation%20of%20limit%20spectra%20of%20sample%20covariance%20matrices-2015-RMTA.pdf
+* Dobriban. E,  *Sharp detection in PCA under correlations: all eigenvalues matter*, The Annals of Statistics. https://github.com/dobriban/Papers/blob/master/Dobriban%20-%20Sharp%20detection%20in%20PCA%20under%20correlations.%20all%20eigenvalues%20matter%20-%202017%20-%20AoS.pdf
 
 The package also has the software to reproduce the computational results of the above papers. 
 
