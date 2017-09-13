@@ -41,7 +41,7 @@ if ~exist('epsilon','var')
     epsilon = 1e-4;
 end
 %set lower bound on epsilon
-%the limitation comes from the ODE solver, which ends up working with 
+%the limitation comes from the ODE solver, which ends up working with
 %2x the precision of epsilon.
 %and currently this is limited to 16 digits
 epsilon = max(epsilon, 1e-8);
@@ -100,7 +100,7 @@ if (gamma <1) %if need to look at lower half
                 v= linspace(v_L+epsilon, min(B)-epsilon, M);
                 [grid,~,~,maxz,ind_max] = evaluate_inverse_ST(t,w,gamma, v);
             end
-            z_u_endpoints(num_clus) = maxz; 
+            z_u_endpoints(num_clus) = maxz;
             num_grid_points(num_clus) = ind_max; %number of grid points in first interval
             z_grid(num_clus,1:ind_max) = grid(1:ind_max);
             v_grid(num_clus,1:ind_max) = v(1:ind_max);
@@ -335,7 +335,7 @@ for i=2:num_clus-1
     %the grid within the i-th support interval
     %adaptively set the grid length to have an accuracy approximately
     %sqrt(ep) within the support interval
-    M_curr = floor((endpoint_2-endpoint_1)/sqrt(epsilon))+10; 
+    M_curr = floor((endpoint_2-endpoint_1)/sqrt(epsilon))+10;
     grid_current = linspace(endpoint_1,endpoint_2,M_curr)';
     v_x(i-1) = {grid_current};
     
@@ -344,6 +344,14 @@ for i=2:num_clus-1
     
     %find dual Stieltjes transform using ode
     [~,v0] = ode45(MP_diff,grid_current,v_start,options);
+    [~, msgid] = lastwarn;
+    while strcmp(msgid,'MATLAB:ode45:IntegrationTolNotMet')
+        ep = 2*ep; 
+        options = odeset('RelTol', ep, 'AbsTol',ep);
+        [~,v0] = ode45(MP_diff,grid_current,v_start,options);
+        [~, msgid] = lastwarn;
+        lastwarn('')     
+    end
     
     %set the output
     grid(ind+1:ind + M_curr) = grid_current;
