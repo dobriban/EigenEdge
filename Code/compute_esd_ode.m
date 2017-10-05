@@ -53,6 +53,11 @@ if ~exist('w','var')
     w = 1/p*ones(p,1);
 end
 
+max_spec = 100;
+if p>max_spec
+    [t,w] = thin(t,max_spec);
+    p = max_spec;
+end
 if ~exist('M','var')
     M = floor(sqrt(1/epsilon))+3;
 end
@@ -332,10 +337,16 @@ for i=2:num_clus-1
     l_hat(i-1) = endpoint_1;
     u_hat(i-1) = endpoint_2;
     
-    %the grid within the i-th support interval
-    %adaptively set the grid length to have an accuracy approximately
-    %sqrt(ep) within the support interval
-    M_curr = floor((endpoint_2-endpoint_1)/sqrt(epsilon))+10;
+    if (endpoint_1< endpoint_2)
+        %the grid within the i-th support interval
+        %adaptively set the grid length to have an accuracy approximately
+        %sqrt(ep) within the support interval
+        M_curr = floor((endpoint_2-endpoint_1)/sqrt(epsilon))+10; 
+    else
+        endpoint_2 = l_hat(i);
+        M_curr = 10;
+    end
+    
     grid_current = linspace(endpoint_1,endpoint_2,M_curr)';
     v_x(i-1) = {grid_current};
     
@@ -344,14 +355,6 @@ for i=2:num_clus-1
     
     %find dual Stieltjes transform using ode
     [~,v0] = ode45(MP_diff,grid_current,v_start,options);
-    [~, msgid] = lastwarn;
-    while strcmp(msgid,'MATLAB:ode45:IntegrationTolNotMet')
-        ep = 2*ep; 
-        options = odeset('RelTol', ep, 'AbsTol',ep);
-        [~,v0] = ode45(MP_diff,grid_current,v_start,options);
-        [~, msgid] = lastwarn;
-        lastwarn('')     
-    end
     
     %set the output
     grid(ind+1:ind + M_curr) = grid_current;
