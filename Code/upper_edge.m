@@ -13,9 +13,19 @@ epsilon = 1e-4;
 while (v_L+epsilon)>=(-epsilon)
     epsilon = epsilon/2;
 end
-M = floor(sqrt(1/epsilon))+3;
-v = linspace(v_L+epsilon,-epsilon, M); %adaptive grid-forming
 
 w = ones(p,1)/p;
-[~,u] = evaluate_inverse_ST(t,w,gamma, v);
+z = @(v) - 1/v + gamma* sum(w.*t./(1 + t.*v));
+z_prime = @(v) 1/v^2 - gamma* sum(w.*t.^2./((1 + t.*v).^2));
+if (z_prime(v_L+epsilon)>-Inf)&&(z_prime(v_L+epsilon)<Inf)
+    n_it=0;
+    while (z_prime(v_L+epsilon)*z_prime(-epsilon)>0)
+        epsilon = epsilon/2;
+        n_it = n_it+1;
+    end
+    v_s = fzero(z_prime,[v_L+epsilon,-epsilon]);
+    u = z(v_s);
+else
+    u = Inf;
+end
 
